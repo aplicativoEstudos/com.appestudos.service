@@ -32,6 +32,8 @@ public class PessoaCriteria implements Serializable, Criteria {
 
     private StringFilter email;
 
+    private LongFilter enderecoId;
+
     public PessoaCriteria() {
     }
 
@@ -40,6 +42,7 @@ public class PessoaCriteria implements Serializable, Criteria {
         this.nome = other.nome == null ? null : other.nome.copy();
         this.sobrenome = other.sobrenome == null ? null : other.sobrenome.copy();
         this.email = other.email == null ? null : other.email.copy();
+        this.enderecoId = other.enderecoId == null ? null : other.enderecoId.copy();
     }
 
     @Override
@@ -79,6 +82,14 @@ public class PessoaCriteria implements Serializable, Criteria {
         this.email = email;
     }
 
+    public LongFilter getEnderecoId() {
+        return enderecoId;
+    }
+
+    public void setEnderecoId(LongFilter enderecoId) {
+        this.enderecoId = enderecoId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -93,7 +104,8 @@ public class PessoaCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(nome, that.nome) &&
             Objects.equals(sobrenome, that.sobrenome) &&
-            Objects.equals(email, that.email);
+            Objects.equals(email, that.email) &&
+            Objects.equals(enderecoId, that.enderecoId);
     }
 
     @Override
@@ -102,7 +114,8 @@ public class PessoaCriteria implements Serializable, Criteria {
         id,
         nome,
         sobrenome,
-        email
+        email,
+        enderecoId
         );
     }
 
@@ -114,6 +127,7 @@ public class PessoaCriteria implements Serializable, Criteria {
                 (nome != null ? "nome=" + nome + ", " : "") +
                 (sobrenome != null ? "sobrenome=" + sobrenome + ", " : "") +
                 (email != null ? "email=" + email + ", " : "") +
+                (enderecoId != null ? "enderecoId=" + enderecoId + ", " : "") +
             "}";
     }
 

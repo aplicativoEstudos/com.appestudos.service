@@ -1,0 +1,30 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="8161 (generated)" id="1625190466639-1">
+        <createTable tableName="endereco">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="enderecoPK"/>
+            </column>
+            <column name="bairro" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cep" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cidade" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rua" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="8161 (generated)" id="1625190466639-2">
+        <addColumn tableName="pessoa">
+            <column name="endereco_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="8161 (generated)" id="1625190466639-3">
+        <addForeignKeyConstraint baseColumnNames="endereco_id" baseTableName="pessoa" constraintName="FKei4abnsw085kx27j89rp796ny" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="endereco" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

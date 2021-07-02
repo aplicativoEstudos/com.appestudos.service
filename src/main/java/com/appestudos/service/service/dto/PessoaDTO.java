@@ -22,6 +22,8 @@ public class PessoaDTO implements Serializable {
     @NotNull
     private String email;
 
+
+    private Long enderecoId;
     
     public Long getId() {
         return id;
@@ -71,6 +73,14 @@ public class PessoaDTO implements Serializable {
         this.email = email;
     }
 
+    public Long getEnderecoId() {
+        return enderecoId;
+    }
+
+    public void setEnderecoId(Long enderecoId) {
+        this.enderecoId = enderecoId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -97,6 +107,7 @@ public class PessoaDTO implements Serializable {
             ", nome='" + getNome() + "'" +
             ", sobrenome='" + getSobrenome() + "'" +
             ", email='" + getEmail() + "'" +
+            ", enderecoId=" + getEnderecoId() +
             "}";
     }
 }

@@ -9,10 +9,14 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Pessoa} and its DTO {@link PessoaDTO}.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {EnderecoMapper.class})
 public interface PessoaMapper extends EntityMapper<PessoaDTO, Pessoa> {
 
+    @Mapping(source = "endereco.id", target = "enderecoId")
+    PessoaDTO toDto(Pessoa pessoa);
 
+    @Mapping(source = "enderecoId", target = "endereco")
+    Pessoa toEntity(PessoaDTO pessoaDTO);
 
     default Pessoa fromId(Long id) {
         if (id == null) {

@@ -3,6 +3,7 @@ package com.appestudos.service.web.rest;
 import com.appestudos.service.AppestudosApp;
 import com.appestudos.service.config.TestSecurityConfiguration;
 import com.appestudos.service.domain.Pessoa;
+import com.appestudos.service.domain.Endereco;
 import com.appestudos.service.repository.PessoaRepository;
 import com.appestudos.service.service.PessoaService;
 import com.appestudos.service.service.dto.PessoaDTO;
@@ -457,6 +458,26 @@ public class PessoaResourceIT {
 
         // Get all the pessoaList where email does not contain UPDATED_EMAIL
         defaultPessoaShouldBeFound("email.doesNotContain=" + UPDATED_EMAIL);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllPessoasByEnderecoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+        Endereco endereco = EnderecoResourceIT.createEntity(em);
+        em.persist(endereco);
+        em.flush();
+        pessoa.setEndereco(endereco);
+        pessoaRepository.saveAndFlush(pessoa);
+        Long enderecoId = endereco.getId();
+
+        // Get all the pessoaList where endereco equals to enderecoId
+        defaultPessoaShouldBeFound("enderecoId.equals=" + enderecoId);
+
+        // Get all the pessoaList where endereco equals to enderecoId + 1
+        defaultPessoaShouldNotBeFound("enderecoId.equals=" + (enderecoId + 1));
     }
 
     /**

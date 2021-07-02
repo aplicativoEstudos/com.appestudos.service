@@ -1,5 +1,6 @@
 package com.appestudos.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -35,6 +36,10 @@ public class Pessoa implements Serializable {
     @NotNull
     @Column(name = "email", nullable = false)
     private String email;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "pessoas", allowSetters = true)
+    private Endereco endereco;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -108,6 +113,19 @@ public class Pessoa implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public Pessoa endereco(Endereco endereco) {
+        this.endereco = endereco;
+        return this;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

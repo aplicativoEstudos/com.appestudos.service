@@ -1,7 +1,5 @@
 {
-  "fluentMethods": true,
-  "clientRootFolder": "appestudos",
-  "relationships": [],
+  "name": "Pessoa",
   "fields": [
     {
       "fieldName": "foto",
@@ -22,6 +20,18 @@
       "fieldValidateRules": ["required"]
     }
   ],
+  "relationships": [
+    {
+      "relationshipName": "endereco",
+      "otherEntityName": "endereco",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "pessoa"
+    }
+  ],
+  "enableEntityAudit": true,
+  "fluentMethods": true,
+  "clientRootFolder": "appestudos",
   "changelogDate": "20210629021740",
   "dto": "mapstruct",
   "searchEngine": false,

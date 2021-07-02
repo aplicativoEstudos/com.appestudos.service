@@ -100,6 +100,10 @@ public class PessoaQueryService extends QueryService<Pessoa> {
             if (criteria.getEmail() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getEmail(), Pessoa_.email));
             }
+            if (criteria.getEnderecoId() != null) {
+                specification = specification.and(buildSpecification(criteria.getEnderecoId(),
+                    root -> root.join(Pessoa_.endereco, JoinType.LEFT).get(Endereco_.id)));
+            }
         }
         return specification;
     }
