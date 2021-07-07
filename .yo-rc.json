@@ -1,0 +1,47 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.appestudos.service",
+      "nativeLanguage": "pt-br"
+    },
+    "jhipsterVersion": "6.10.5",
+    "applicationType": "microservice",
+    "baseName": "appestudos",
+    "packageName": "com.appestudos.service",
+    "packageFolder": "com/appestudos/service",
+    "serverPort": "8081",
+    "authenticationType": "oauth2",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZWI1NGY2NTRkODBhMDhkN2Y2ZDRmYjM2NjRhMTkxODM4ZGYwZjczN2MzMWQ4M2U2YTI3ZmFkZDEyNTk5ZDg0YTMxZDg2OGU1MTExOTFjOGI2Mzg1YTY1YzU2ODliNzM0Y2Y2Nzk0NDQ3ODljMjEzNGI0MjkzZDQyNjA0MmVlODA=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1616273312525,
+    "testFrameworks": ["cucumber"],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "clientPackageManager": "npm",
+    "nativeLanguage": "pt-br",
+    "languages": ["pt-br", "en", "es"],
+    "blueprints": [],
+    "skipClient": true,
+    "skipUserManagement": true,
+    "lastLiquibaseTimestamp": 1625189762000
+  },
+  "generator-jhipster-entity-audit": {
+    "auditFramework": "custom",
+    "auditPage": true,
+    "lastLiquibaseTimestamp": 1610039336000
+  }
+}
