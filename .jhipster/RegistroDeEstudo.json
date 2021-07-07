@@ -1,0 +1,57 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "appestudos",
+  "fields": [
+    {
+      "fieldName": "data",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "horaInicial",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "horaFinal",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "duracaoTempo",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipName": "area",
+      "otherEntityName": "area",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "tempoDeEstudo"
+    },
+    {
+      "relationshipName": "disciplina",
+      "otherEntityName": "disciplina",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "tempoDeEstudo"
+    },
+    {
+      "relationshipName": "pessoa",
+      "otherEntityName": "pessoa",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "tempoDeEstudo"
+    }
+  ],
+
+  "changelogDate": "20210705014651",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "registro_de_estudo",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination",
+  "microserviceName": "appestudos"
+}

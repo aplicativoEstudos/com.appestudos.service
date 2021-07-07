@@ -6,6 +6,11 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 
 /**
  * A Pessoa.
@@ -156,5 +161,21 @@ public class Pessoa implements Serializable {
             ", sobrenome='" + getSobrenome() + "'" +
             ", email='" + getEmail() + "'" +
             "}";
+    }
+    
+    public static void main(String[] args) {
+        LocalDateTime startDateTime = LocalDateTime.of(2020, Month.DECEMBER, 9, 23, 20, 25);
+        LocalDateTime endDateTime = LocalDateTime.of(2020, Month.DECEMBER, 11, 01, 24, 30);
+
+        Duration duration = Duration.between(startDateTime, endDateTime);
+        // Default format
+        System.out.println(duration);
+
+        // Custom format
+        // ####################################Java-9####################################
+        String formattedElapsedTime = String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(),
+                duration.toSecondsPart());
+        System.out.println(formattedElapsedTime);
+        // ##############################################################################
     }
 }

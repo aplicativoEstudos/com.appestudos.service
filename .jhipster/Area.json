@@ -1,0 +1,21 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "appestudos",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "noma",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20210705014223",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "area",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination",
+  "microserviceName": "appestudos"
+}

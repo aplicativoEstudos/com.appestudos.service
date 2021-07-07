@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity RegistroDeEstudo.
+    -->
+    <changeSet id="20210705014651-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="area_id"
+                                 baseTableName="registro_de_estudo"
+                                 constraintName="fk_registro_de_estudo_area_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="area"/>
+
+        <addForeignKeyConstraint baseColumnNames="disciplina_id"
+                                 baseTableName="registro_de_estudo"
+                                 constraintName="fk_registro_de_estudo_disciplina_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="disciplina"/>
+
+        <addForeignKeyConstraint baseColumnNames="pessoa_id"
+                                 baseTableName="registro_de_estudo"
+                                 constraintName="fk_registro_de_estudo_pessoa_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="pessoa"/>
+
+    </changeSet>
+</databaseChangeLog>
