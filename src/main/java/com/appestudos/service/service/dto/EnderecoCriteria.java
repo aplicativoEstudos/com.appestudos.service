@@ -34,6 +34,8 @@ public class EnderecoCriteria implements Serializable, Criteria {
 
     private StringFilter cep;
 
+    private IntegerFilter numero;
+
     public EnderecoCriteria() {
     }
 
@@ -43,6 +45,7 @@ public class EnderecoCriteria implements Serializable, Criteria {
         this.bairro = other.bairro == null ? null : other.bairro.copy();
         this.rua = other.rua == null ? null : other.rua.copy();
         this.cep = other.cep == null ? null : other.cep.copy();
+        this.numero = other.numero == null ? null : other.numero.copy();
     }
 
     @Override
@@ -90,6 +93,14 @@ public class EnderecoCriteria implements Serializable, Criteria {
         this.cep = cep;
     }
 
+    public IntegerFilter getNumero() {
+        return numero;
+    }
+
+    public void setNumero(IntegerFilter numero) {
+        this.numero = numero;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -105,7 +116,8 @@ public class EnderecoCriteria implements Serializable, Criteria {
             Objects.equals(cidade, that.cidade) &&
             Objects.equals(bairro, that.bairro) &&
             Objects.equals(rua, that.rua) &&
-            Objects.equals(cep, that.cep);
+            Objects.equals(cep, that.cep) &&
+            Objects.equals(numero, that.numero);
     }
 
     @Override
@@ -115,7 +127,8 @@ public class EnderecoCriteria implements Serializable, Criteria {
         cidade,
         bairro,
         rua,
-        cep
+        cep,
+        numero
         );
     }
 
@@ -128,6 +141,7 @@ public class EnderecoCriteria implements Serializable, Criteria {
                 (bairro != null ? "bairro=" + bairro + ", " : "") +
                 (rua != null ? "rua=" + rua + ", " : "") +
                 (cep != null ? "cep=" + cep + ", " : "") +
+                (numero != null ? "numero=" + numero + ", " : "") +
             "}";
     }
 

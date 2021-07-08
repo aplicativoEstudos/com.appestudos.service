@@ -8,16 +8,25 @@
     },
     {
       "fieldName": "nome",
-      "fieldType": "String"
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "sobrenome",
-      "fieldType": "String"
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "email",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": ["required", "pattern"],
+      "fieldValidateRulesPattern": "^\\S+@\\S+$"
+    },
+    {
+      "fieldName": "telefone",
+      "fieldType": "String",
+      "fieldValidateRules": ["pattern"],
+      "fieldValidateRulesPattern": "\\(\\d{2}\\)\\s\\d{4,5}\\-\\d{4}"
     }
   ],
   "relationships": [

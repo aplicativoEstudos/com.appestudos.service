@@ -49,8 +49,11 @@ public class PessoaResourceIT {
     private static final String DEFAULT_SOBRENOME = "AAAAAAAAAA";
     private static final String UPDATED_SOBRENOME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_EMAIL = "AAAAAAAAAA";
-    private static final String UPDATED_EMAIL = "BBBBBBBBBB";
+    private static final String DEFAULT_EMAIL = "Q4#Q@.xx";
+    private static final String UPDATED_EMAIL = "dUKZ@~";
+
+    private static final String DEFAULT_TELEFONE = "(64) 6390-8196";
+    private static final String UPDATED_TELEFONE = "(51) 5214-5195";
 
     @Autowired
     private PessoaRepository pessoaRepository;
@@ -84,7 +87,8 @@ public class PessoaResourceIT {
             .fotoContentType(DEFAULT_FOTO_CONTENT_TYPE)
             .nome(DEFAULT_NOME)
             .sobrenome(DEFAULT_SOBRENOME)
-            .email(DEFAULT_EMAIL);
+            .email(DEFAULT_EMAIL)
+            .telefone(DEFAULT_TELEFONE);
         return pessoa;
     }
     /**
@@ -99,7 +103,8 @@ public class PessoaResourceIT {
             .fotoContentType(UPDATED_FOTO_CONTENT_TYPE)
             .nome(UPDATED_NOME)
             .sobrenome(UPDATED_SOBRENOME)
-            .email(UPDATED_EMAIL);
+            .email(UPDATED_EMAIL)
+            .telefone(UPDATED_TELEFONE);
         return pessoa;
     }
 
@@ -128,6 +133,7 @@ public class PessoaResourceIT {
         assertThat(testPessoa.getNome()).isEqualTo(DEFAULT_NOME);
         assertThat(testPessoa.getSobrenome()).isEqualTo(DEFAULT_SOBRENOME);
         assertThat(testPessoa.getEmail()).isEqualTo(DEFAULT_EMAIL);
+        assertThat(testPessoa.getTelefone()).isEqualTo(DEFAULT_TELEFONE);
     }
 
     @Test
@@ -150,6 +156,46 @@ public class PessoaResourceIT {
         assertThat(pessoaList).hasSize(databaseSizeBeforeCreate);
     }
 
+
+    @Test
+    @Transactional
+    public void checkNomeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = pessoaRepository.findAll().size();
+        // set the field null
+        pessoa.setNome(null);
+
+        // Create the Pessoa, which fails.
+        PessoaDTO pessoaDTO = pessoaMapper.toDto(pessoa);
+
+
+        restPessoaMockMvc.perform(post("/api/pessoas").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(pessoaDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkSobrenomeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = pessoaRepository.findAll().size();
+        // set the field null
+        pessoa.setSobrenome(null);
+
+        // Create the Pessoa, which fails.
+        PessoaDTO pessoaDTO = pessoaMapper.toDto(pessoa);
+
+
+        restPessoaMockMvc.perform(post("/api/pessoas").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(pessoaDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeTest);
+    }
 
     @Test
     @Transactional
@@ -186,7 +232,8 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.[*].foto").value(hasItem(Base64Utils.encodeToString(DEFAULT_FOTO))))
             .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME)))
             .andExpect(jsonPath("$.[*].sobrenome").value(hasItem(DEFAULT_SOBRENOME)))
-            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)));
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
+            .andExpect(jsonPath("$.[*].telefone").value(hasItem(DEFAULT_TELEFONE)));
     }
     
     @Test
@@ -204,7 +251,8 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.foto").value(Base64Utils.encodeToString(DEFAULT_FOTO)))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME))
             .andExpect(jsonPath("$.sobrenome").value(DEFAULT_SOBRENOME))
-            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL));
+            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
+            .andExpect(jsonPath("$.telefone").value(DEFAULT_TELEFONE));
     }
 
 
@@ -463,6 +511,84 @@ public class PessoaResourceIT {
 
     @Test
     @Transactional
+    public void getAllPessoasByTelefoneIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where telefone equals to DEFAULT_TELEFONE
+        defaultPessoaShouldBeFound("telefone.equals=" + DEFAULT_TELEFONE);
+
+        // Get all the pessoaList where telefone equals to UPDATED_TELEFONE
+        defaultPessoaShouldNotBeFound("telefone.equals=" + UPDATED_TELEFONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPessoasByTelefoneIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where telefone not equals to DEFAULT_TELEFONE
+        defaultPessoaShouldNotBeFound("telefone.notEquals=" + DEFAULT_TELEFONE);
+
+        // Get all the pessoaList where telefone not equals to UPDATED_TELEFONE
+        defaultPessoaShouldBeFound("telefone.notEquals=" + UPDATED_TELEFONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPessoasByTelefoneIsInShouldWork() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where telefone in DEFAULT_TELEFONE or UPDATED_TELEFONE
+        defaultPessoaShouldBeFound("telefone.in=" + DEFAULT_TELEFONE + "," + UPDATED_TELEFONE);
+
+        // Get all the pessoaList where telefone equals to UPDATED_TELEFONE
+        defaultPessoaShouldNotBeFound("telefone.in=" + UPDATED_TELEFONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPessoasByTelefoneIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where telefone is not null
+        defaultPessoaShouldBeFound("telefone.specified=true");
+
+        // Get all the pessoaList where telefone is null
+        defaultPessoaShouldNotBeFound("telefone.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllPessoasByTelefoneContainsSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where telefone contains DEFAULT_TELEFONE
+        defaultPessoaShouldBeFound("telefone.contains=" + DEFAULT_TELEFONE);
+
+        // Get all the pessoaList where telefone contains UPDATED_TELEFONE
+        defaultPessoaShouldNotBeFound("telefone.contains=" + UPDATED_TELEFONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPessoasByTelefoneNotContainsSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where telefone does not contain DEFAULT_TELEFONE
+        defaultPessoaShouldNotBeFound("telefone.doesNotContain=" + DEFAULT_TELEFONE);
+
+        // Get all the pessoaList where telefone does not contain UPDATED_TELEFONE
+        defaultPessoaShouldBeFound("telefone.doesNotContain=" + UPDATED_TELEFONE);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllPessoasByEnderecoIsEqualToSomething() throws Exception {
         // Initialize the database
         pessoaRepository.saveAndFlush(pessoa);
@@ -492,7 +618,8 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.[*].foto").value(hasItem(Base64Utils.encodeToString(DEFAULT_FOTO))))
             .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME)))
             .andExpect(jsonPath("$.[*].sobrenome").value(hasItem(DEFAULT_SOBRENOME)))
-            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)));
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
+            .andExpect(jsonPath("$.[*].telefone").value(hasItem(DEFAULT_TELEFONE)));
 
         // Check, that the count call also returns 1
         restPessoaMockMvc.perform(get("/api/pessoas/count?sort=id,desc&" + filter))
@@ -543,7 +670,8 @@ public class PessoaResourceIT {
             .fotoContentType(UPDATED_FOTO_CONTENT_TYPE)
             .nome(UPDATED_NOME)
             .sobrenome(UPDATED_SOBRENOME)
-            .email(UPDATED_EMAIL);
+            .email(UPDATED_EMAIL)
+            .telefone(UPDATED_TELEFONE);
         PessoaDTO pessoaDTO = pessoaMapper.toDto(updatedPessoa);
 
         restPessoaMockMvc.perform(put("/api/pessoas").with(csrf())
@@ -560,6 +688,7 @@ public class PessoaResourceIT {
         assertThat(testPessoa.getNome()).isEqualTo(UPDATED_NOME);
         assertThat(testPessoa.getSobrenome()).isEqualTo(UPDATED_SOBRENOME);
         assertThat(testPessoa.getEmail()).isEqualTo(UPDATED_EMAIL);
+        assertThat(testPessoa.getTelefone()).isEqualTo(UPDATED_TELEFONE);
     }
 
     @Test

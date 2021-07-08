@@ -3,10 +3,6 @@
   "clientRootFolder": "appestudos",
   "fields": [
     {
-      "fieldName": "data",
-      "fieldType": "LocalDate"
-    },
-    {
       "fieldName": "horaInicial",
       "fieldType": "Instant"
     },
@@ -24,6 +20,7 @@
       "relationshipName": "area",
       "otherEntityName": "area",
       "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
       "otherEntityField": "id",
       "otherEntityRelationshipName": "tempoDeEstudo"
     },
@@ -31,6 +28,7 @@
       "relationshipName": "disciplina",
       "otherEntityName": "disciplina",
       "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
       "otherEntityField": "id",
       "otherEntityRelationshipName": "tempoDeEstudo"
     },

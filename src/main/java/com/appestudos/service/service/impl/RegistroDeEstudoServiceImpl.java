@@ -42,6 +42,31 @@ public class RegistroDeEstudoServiceImpl implements RegistroDeEstudoService {
         registroDeEstudo = registroDeEstudoRepository.save(registroDeEstudo);
         return registroDeEstudoMapper.toDto(registroDeEstudo);
     }
+    
+    @Override
+    public RegistroDeEstudoDTO start(RegistroDeEstudoDTO registroDeEstudoDTO) {
+        log.debug("Request to save RegistroDeEstudo : {}", registroDeEstudoDTO);
+        if(registroDeEstudoDTO.getHoraInicial()==null) {
+        	registroDeEstudoDTO.setHoraInicial(Instant.now());
+        }
+        registroDeEstudoDTO.setHoraFinal(null);
+        registroDeEstudoDTO.setDuracaoTempo(null);
+        RegistroDeEstudo registroDeEstudo = registroDeEstudoMapper.toEntity(registroDeEstudoDTO);
+        registroDeEstudo = registroDeEstudoRepository.save(registroDeEstudo);
+        return registroDeEstudoMapper.toDto(registroDeEstudo);
+    }
+    
+    @Override
+    public RegistroDeEstudoDTO stop(RegistroDeEstudoDTO registroDeEstudoDTO) {
+        log.debug("Request to save RegistroDeEstudo : {}", registroDeEstudoDTO);
+        registroDeEstudoDTO.setHoraFinal(Instant.now());
+        Duration duration = Duration.between(registroDeEstudoDTO.getHoraInicial(),registroDeEstudoDTO.getHoraFinal());
+        registroDeEstudoDTO.setDuracaoTempo(String.format(duration.toHours()+":"+duration.toMinutesPart()+
+                ":"+duration.toSecondsPart()));
+        RegistroDeEstudo registroDeEstudo = registroDeEstudoMapper.toEntity(registroDeEstudoDTO);
+        registroDeEstudo = registroDeEstudoRepository.save(registroDeEstudo);
+        return registroDeEstudoMapper.toDto(registroDeEstudo);
+    }
 
     @Override
     @Transactional(readOnly = true)

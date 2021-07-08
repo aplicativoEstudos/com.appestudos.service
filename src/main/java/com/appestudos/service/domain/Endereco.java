@@ -32,8 +32,12 @@ public class Endereco implements Serializable {
     private String rua;
 
     @NotNull
+    @Pattern(regexp = "[0-9]{5}-[\\d]{3}")
     @Column(name = "cep", nullable = false)
     private String cep;
+
+    @Column(name = "numero")
+    private Integer numero;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -95,6 +99,19 @@ public class Endereco implements Serializable {
     public void setCep(String cep) {
         this.cep = cep;
     }
+
+    public Integer getNumero() {
+        return numero;
+    }
+
+    public Endereco numero(Integer numero) {
+        this.numero = numero;
+        return this;
+    }
+
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -122,6 +139,7 @@ public class Endereco implements Serializable {
             ", bairro='" + getBairro() + "'" +
             ", rua='" + getRua() + "'" +
             ", cep='" + getCep() + "'" +
+            ", numero=" + getNumero() +
             "}";
     }
 }

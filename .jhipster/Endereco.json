@@ -21,7 +21,12 @@
     {
       "fieldName": "cep",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": ["required", "pattern"],
+      "fieldValidateRulesPattern": "[0-9]{5}-[\\d]{3}"
+    },
+    {
+      "fieldName": "numero",
+      "fieldType": "Integer"
     }
   ],
   "changelogDate": "20210702013602",

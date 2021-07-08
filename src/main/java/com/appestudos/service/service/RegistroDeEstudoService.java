@@ -43,4 +43,9 @@ public interface RegistroDeEstudoService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+    
+    RegistroDeEstudoDTO start(RegistroDeEstudoDTO registroDeEstudoDTO);
+    
+    
+    RegistroDeEstudoDTO stop(RegistroDeEstudoDTO registroDeEstudoDTO);
 }

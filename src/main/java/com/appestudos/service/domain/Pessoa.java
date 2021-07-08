@@ -6,11 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.temporal.ChronoUnit;
 
 /**
  * A Pessoa.
@@ -32,15 +27,22 @@ public class Pessoa implements Serializable {
     @Column(name = "foto_content_type")
     private String fotoContentType;
 
-    @Column(name = "nome")
+    @NotNull
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "sobrenome")
+    @NotNull
+    @Column(name = "sobrenome", nullable = false)
     private String sobrenome;
 
     @NotNull
+    @Pattern(regexp = "^\\S+@\\S+$")
     @Column(name = "email", nullable = false)
     private String email;
+
+    @Pattern(regexp = "\\(\\d{2}\\)\\s\\d{4,5}\\-\\d{4}")
+    @Column(name = "telefone")
+    private String telefone;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "pessoas", allowSetters = true)
@@ -120,6 +122,19 @@ public class Pessoa implements Serializable {
         this.email = email;
     }
 
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public Pessoa telefone(String telefone) {
+        this.telefone = telefone;
+        return this;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
     public Endereco getEndereco() {
         return endereco;
     }
@@ -160,22 +175,7 @@ public class Pessoa implements Serializable {
             ", nome='" + getNome() + "'" +
             ", sobrenome='" + getSobrenome() + "'" +
             ", email='" + getEmail() + "'" +
+            ", telefone='" + getTelefone() + "'" +
             "}";
-    }
-    
-    public static void main(String[] args) {
-        LocalDateTime startDateTime = LocalDateTime.of(2020, Month.DECEMBER, 9, 23, 20, 25);
-        LocalDateTime endDateTime = LocalDateTime.of(2020, Month.DECEMBER, 11, 01, 24, 30);
-
-        Duration duration = Duration.between(startDateTime, endDateTime);
-        // Default format
-        System.out.println(duration);
-
-        // Custom format
-        // ####################################Java-9####################################
-        String formattedElapsedTime = String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(),
-                duration.toSecondsPart());
-        System.out.println(formattedElapsedTime);
-        // ##############################################################################
     }
 }

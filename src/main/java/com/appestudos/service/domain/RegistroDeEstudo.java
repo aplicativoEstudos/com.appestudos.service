@@ -7,7 +7,6 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDate;
 
 /**
  * A RegistroDeEstudo.
@@ -22,9 +21,6 @@ public class RegistroDeEstudo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "data")
-    private LocalDate data;
-
     @Column(name = "hora_inicial")
     private Instant horaInicial;
 
@@ -34,11 +30,13 @@ public class RegistroDeEstudo implements Serializable {
     @Column(name = "duracao_tempo")
     private String duracaoTempo;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = "tempoDeEstudos", allowSetters = true)
     private Area area;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = "tempoDeEstudos", allowSetters = true)
     private Disciplina disciplina;
 
@@ -54,19 +52,6 @@ public class RegistroDeEstudo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public RegistroDeEstudo data(LocalDate data) {
-        this.data = data;
-        return this;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
     }
 
     public Instant getHoraInicial() {
@@ -169,7 +154,6 @@ public class RegistroDeEstudo implements Serializable {
     public String toString() {
         return "RegistroDeEstudo{" +
             "id=" + getId() +
-            ", data='" + getData() + "'" +
             ", horaInicial='" + getHoraInicial() + "'" +
             ", horaFinal='" + getHoraFinal() + "'" +
             ", duracaoTempo='" + getDuracaoTempo() + "'" +

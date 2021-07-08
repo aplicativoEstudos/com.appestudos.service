@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,14 +62,23 @@ public class RegistroDeEstudoResource {
         if (registroDeEstudoDTO.getId() != null) {
             throw new BadRequestAlertException("A new registroDeEstudo cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        registroDeEstudoDTO.setHoraInicial(Instant.now());
-        registroDeEstudoDTO.setHoraFinal(null);
         RegistroDeEstudoDTO result = registroDeEstudoService.save(registroDeEstudoDTO);
         return ResponseEntity.created(new URI("/api/registro-de-estudos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
+    @PostMapping("/registro-de-estudos/start")
+    public ResponseEntity<RegistroDeEstudoDTO> startRegistroDeEstudo(@Valid @RequestBody RegistroDeEstudoDTO registroDeEstudoDTO) throws URISyntaxException {
+        log.debug("REST request to save RegistroDeEstudo : {}", registroDeEstudoDTO);
+      //  if (registroDeEstudoDTO.getId() != null) {
+      //      throw new BadRequestAlertException("A new registroDeEstudo cannot already have an ID", ENTITY_NAME, "idexists");
+       // }
+        RegistroDeEstudoDTO result = registroDeEstudoService.start(registroDeEstudoDTO);
+        return ResponseEntity.created(new URI("/api/registro-de-estudos/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
     /**
      * {@code PUT  /registro-de-estudos} : Updates an existing registroDeEstudo.
      *
@@ -87,11 +94,19 @@ public class RegistroDeEstudoResource {
         if (registroDeEstudoDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        registroDeEstudoDTO.setHoraFinal(Instant.now());
-        Duration duration = Duration.between(registroDeEstudoDTO.getHoraInicial(),registroDeEstudoDTO.getHoraFinal());
-        registroDeEstudoDTO.setDuracaoTempo(String.format(duration.toHours()+":"+duration.toMinutesPart()+":"+
-                duration.toSecondsPart()));
         RegistroDeEstudoDTO result = registroDeEstudoService.save(registroDeEstudoDTO);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, registroDeEstudoDTO.getId().toString()))
+            .body(result);
+    }
+    
+    @PutMapping("/registro-de-estudos/stop")
+    public ResponseEntity<RegistroDeEstudoDTO> stopRegistroDeEstudo(@Valid @RequestBody RegistroDeEstudoDTO registroDeEstudoDTO) throws URISyntaxException {
+        log.debug("REST request to update RegistroDeEstudo : {}", registroDeEstudoDTO);
+        if (registroDeEstudoDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        RegistroDeEstudoDTO result = registroDeEstudoService.stop(registroDeEstudoDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, registroDeEstudoDTO.getId().toString()))
             .body(result);

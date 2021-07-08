@@ -20,7 +20,10 @@ public class EnderecoDTO implements Serializable {
     private String rua;
 
     @NotNull
+    @Pattern(regexp = "[0-9]{5}-[\\d]{3}")
     private String cep;
+
+    private Integer numero;
 
     
     public Long getId() {
@@ -63,6 +66,14 @@ public class EnderecoDTO implements Serializable {
         this.cep = cep;
     }
 
+    public Integer getNumero() {
+        return numero;
+    }
+
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -89,6 +100,7 @@ public class EnderecoDTO implements Serializable {
             ", bairro='" + getBairro() + "'" +
             ", rua='" + getRua() + "'" +
             ", cep='" + getCep() + "'" +
+            ", numero=" + getNumero() +
             "}";
     }
 }

@@ -91,9 +91,6 @@ public class RegistroDeEstudoQueryService extends QueryService<RegistroDeEstudo>
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), RegistroDeEstudo_.id));
             }
-            if (criteria.getData() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getData(), RegistroDeEstudo_.data));
-            }
             if (criteria.getHoraInicial() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getHoraInicial(), RegistroDeEstudo_.horaInicial));
             }

@@ -23,9 +23,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -42,10 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class RegistroDeEstudoResourceIT {
-
-    private static final LocalDate DEFAULT_DATA = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATA = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_DATA = LocalDate.ofEpochDay(-1L);
 
     private static final Instant DEFAULT_HORA_INICIAL = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_HORA_INICIAL = Instant.now().truncatedTo(ChronoUnit.MILLIS);
@@ -84,10 +78,29 @@ public class RegistroDeEstudoResourceIT {
      */
     public static RegistroDeEstudo createEntity(EntityManager em) {
         RegistroDeEstudo registroDeEstudo = new RegistroDeEstudo()
-            .data(DEFAULT_DATA)
             .horaInicial(DEFAULT_HORA_INICIAL)
             .horaFinal(DEFAULT_HORA_FINAL)
             .duracaoTempo(DEFAULT_DURACAO_TEMPO);
+        // Add required entity
+        Area area;
+        if (TestUtil.findAll(em, Area.class).isEmpty()) {
+            area = AreaResourceIT.createEntity(em);
+            em.persist(area);
+            em.flush();
+        } else {
+            area = TestUtil.findAll(em, Area.class).get(0);
+        }
+        registroDeEstudo.setArea(area);
+        // Add required entity
+        Disciplina disciplina;
+        if (TestUtil.findAll(em, Disciplina.class).isEmpty()) {
+            disciplina = DisciplinaResourceIT.createEntity(em);
+            em.persist(disciplina);
+            em.flush();
+        } else {
+            disciplina = TestUtil.findAll(em, Disciplina.class).get(0);
+        }
+        registroDeEstudo.setDisciplina(disciplina);
         // Add required entity
         Pessoa pessoa;
         if (TestUtil.findAll(em, Pessoa.class).isEmpty()) {
@@ -108,10 +121,29 @@ public class RegistroDeEstudoResourceIT {
      */
     public static RegistroDeEstudo createUpdatedEntity(EntityManager em) {
         RegistroDeEstudo registroDeEstudo = new RegistroDeEstudo()
-            .data(UPDATED_DATA)
             .horaInicial(UPDATED_HORA_INICIAL)
             .horaFinal(UPDATED_HORA_FINAL)
             .duracaoTempo(UPDATED_DURACAO_TEMPO);
+        // Add required entity
+        Area area;
+        if (TestUtil.findAll(em, Area.class).isEmpty()) {
+            area = AreaResourceIT.createUpdatedEntity(em);
+            em.persist(area);
+            em.flush();
+        } else {
+            area = TestUtil.findAll(em, Area.class).get(0);
+        }
+        registroDeEstudo.setArea(area);
+        // Add required entity
+        Disciplina disciplina;
+        if (TestUtil.findAll(em, Disciplina.class).isEmpty()) {
+            disciplina = DisciplinaResourceIT.createUpdatedEntity(em);
+            em.persist(disciplina);
+            em.flush();
+        } else {
+            disciplina = TestUtil.findAll(em, Disciplina.class).get(0);
+        }
+        registroDeEstudo.setDisciplina(disciplina);
         // Add required entity
         Pessoa pessoa;
         if (TestUtil.findAll(em, Pessoa.class).isEmpty()) {
@@ -145,7 +177,6 @@ public class RegistroDeEstudoResourceIT {
         List<RegistroDeEstudo> registroDeEstudoList = registroDeEstudoRepository.findAll();
         assertThat(registroDeEstudoList).hasSize(databaseSizeBeforeCreate + 1);
         RegistroDeEstudo testRegistroDeEstudo = registroDeEstudoList.get(registroDeEstudoList.size() - 1);
-        assertThat(testRegistroDeEstudo.getData()).isEqualTo(DEFAULT_DATA);
         assertThat(testRegistroDeEstudo.getHoraInicial()).isEqualTo(DEFAULT_HORA_INICIAL);
         assertThat(testRegistroDeEstudo.getHoraFinal()).isEqualTo(DEFAULT_HORA_FINAL);
         assertThat(testRegistroDeEstudo.getDuracaoTempo()).isEqualTo(DEFAULT_DURACAO_TEMPO);
@@ -183,7 +214,6 @@ public class RegistroDeEstudoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(registroDeEstudo.getId().intValue())))
-            .andExpect(jsonPath("$.[*].data").value(hasItem(DEFAULT_DATA.toString())))
             .andExpect(jsonPath("$.[*].horaInicial").value(hasItem(DEFAULT_HORA_INICIAL.toString())))
             .andExpect(jsonPath("$.[*].horaFinal").value(hasItem(DEFAULT_HORA_FINAL.toString())))
             .andExpect(jsonPath("$.[*].duracaoTempo").value(hasItem(DEFAULT_DURACAO_TEMPO)));
@@ -200,7 +230,6 @@ public class RegistroDeEstudoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(registroDeEstudo.getId().intValue()))
-            .andExpect(jsonPath("$.data").value(DEFAULT_DATA.toString()))
             .andExpect(jsonPath("$.horaInicial").value(DEFAULT_HORA_INICIAL.toString()))
             .andExpect(jsonPath("$.horaFinal").value(DEFAULT_HORA_FINAL.toString()))
             .andExpect(jsonPath("$.duracaoTempo").value(DEFAULT_DURACAO_TEMPO));
@@ -223,111 +252,6 @@ public class RegistroDeEstudoResourceIT {
 
         defaultRegistroDeEstudoShouldBeFound("id.lessThanOrEqual=" + id);
         defaultRegistroDeEstudoShouldNotBeFound("id.lessThan=" + id);
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllRegistroDeEstudosByDataIsEqualToSomething() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-
-        // Get all the registroDeEstudoList where data equals to DEFAULT_DATA
-        defaultRegistroDeEstudoShouldBeFound("data.equals=" + DEFAULT_DATA);
-
-        // Get all the registroDeEstudoList where data equals to UPDATED_DATA
-        defaultRegistroDeEstudoShouldNotBeFound("data.equals=" + UPDATED_DATA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllRegistroDeEstudosByDataIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-
-        // Get all the registroDeEstudoList where data not equals to DEFAULT_DATA
-        defaultRegistroDeEstudoShouldNotBeFound("data.notEquals=" + DEFAULT_DATA);
-
-        // Get all the registroDeEstudoList where data not equals to UPDATED_DATA
-        defaultRegistroDeEstudoShouldBeFound("data.notEquals=" + UPDATED_DATA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllRegistroDeEstudosByDataIsInShouldWork() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-
-        // Get all the registroDeEstudoList where data in DEFAULT_DATA or UPDATED_DATA
-        defaultRegistroDeEstudoShouldBeFound("data.in=" + DEFAULT_DATA + "," + UPDATED_DATA);
-
-        // Get all the registroDeEstudoList where data equals to UPDATED_DATA
-        defaultRegistroDeEstudoShouldNotBeFound("data.in=" + UPDATED_DATA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllRegistroDeEstudosByDataIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-
-        // Get all the registroDeEstudoList where data is not null
-        defaultRegistroDeEstudoShouldBeFound("data.specified=true");
-
-        // Get all the registroDeEstudoList where data is null
-        defaultRegistroDeEstudoShouldNotBeFound("data.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllRegistroDeEstudosByDataIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-
-        // Get all the registroDeEstudoList where data is greater than or equal to DEFAULT_DATA
-        defaultRegistroDeEstudoShouldBeFound("data.greaterThanOrEqual=" + DEFAULT_DATA);
-
-        // Get all the registroDeEstudoList where data is greater than or equal to UPDATED_DATA
-        defaultRegistroDeEstudoShouldNotBeFound("data.greaterThanOrEqual=" + UPDATED_DATA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllRegistroDeEstudosByDataIsLessThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-
-        // Get all the registroDeEstudoList where data is less than or equal to DEFAULT_DATA
-        defaultRegistroDeEstudoShouldBeFound("data.lessThanOrEqual=" + DEFAULT_DATA);
-
-        // Get all the registroDeEstudoList where data is less than or equal to SMALLER_DATA
-        defaultRegistroDeEstudoShouldNotBeFound("data.lessThanOrEqual=" + SMALLER_DATA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllRegistroDeEstudosByDataIsLessThanSomething() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-
-        // Get all the registroDeEstudoList where data is less than DEFAULT_DATA
-        defaultRegistroDeEstudoShouldNotBeFound("data.lessThan=" + DEFAULT_DATA);
-
-        // Get all the registroDeEstudoList where data is less than UPDATED_DATA
-        defaultRegistroDeEstudoShouldBeFound("data.lessThan=" + UPDATED_DATA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllRegistroDeEstudosByDataIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-
-        // Get all the registroDeEstudoList where data is greater than DEFAULT_DATA
-        defaultRegistroDeEstudoShouldNotBeFound("data.greaterThan=" + DEFAULT_DATA);
-
-        // Get all the registroDeEstudoList where data is greater than SMALLER_DATA
-        defaultRegistroDeEstudoShouldBeFound("data.greaterThan=" + SMALLER_DATA);
     }
 
 
@@ -516,12 +440,8 @@ public class RegistroDeEstudoResourceIT {
     @Test
     @Transactional
     public void getAllRegistroDeEstudosByAreaIsEqualToSomething() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-        Area area = AreaResourceIT.createEntity(em);
-        em.persist(area);
-        em.flush();
-        registroDeEstudo.setArea(area);
+        // Get already existing entity
+        Area area = registroDeEstudo.getArea();
         registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
         Long areaId = area.getId();
 
@@ -536,12 +456,8 @@ public class RegistroDeEstudoResourceIT {
     @Test
     @Transactional
     public void getAllRegistroDeEstudosByDisciplinaIsEqualToSomething() throws Exception {
-        // Initialize the database
-        registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
-        Disciplina disciplina = DisciplinaResourceIT.createEntity(em);
-        em.persist(disciplina);
-        em.flush();
-        registroDeEstudo.setDisciplina(disciplina);
+        // Get already existing entity
+        Disciplina disciplina = registroDeEstudo.getDisciplina();
         registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
         Long disciplinaId = disciplina.getId();
 
@@ -576,7 +492,6 @@ public class RegistroDeEstudoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(registroDeEstudo.getId().intValue())))
-            .andExpect(jsonPath("$.[*].data").value(hasItem(DEFAULT_DATA.toString())))
             .andExpect(jsonPath("$.[*].horaInicial").value(hasItem(DEFAULT_HORA_INICIAL.toString())))
             .andExpect(jsonPath("$.[*].horaFinal").value(hasItem(DEFAULT_HORA_FINAL.toString())))
             .andExpect(jsonPath("$.[*].duracaoTempo").value(hasItem(DEFAULT_DURACAO_TEMPO)));
@@ -626,7 +541,6 @@ public class RegistroDeEstudoResourceIT {
         // Disconnect from session so that the updates on updatedRegistroDeEstudo are not directly saved in db
         em.detach(updatedRegistroDeEstudo);
         updatedRegistroDeEstudo
-            .data(UPDATED_DATA)
             .horaInicial(UPDATED_HORA_INICIAL)
             .horaFinal(UPDATED_HORA_FINAL)
             .duracaoTempo(UPDATED_DURACAO_TEMPO);
@@ -641,7 +555,6 @@ public class RegistroDeEstudoResourceIT {
         List<RegistroDeEstudo> registroDeEstudoList = registroDeEstudoRepository.findAll();
         assertThat(registroDeEstudoList).hasSize(databaseSizeBeforeUpdate);
         RegistroDeEstudo testRegistroDeEstudo = registroDeEstudoList.get(registroDeEstudoList.size() - 1);
-        assertThat(testRegistroDeEstudo.getData()).isEqualTo(UPDATED_DATA);
         assertThat(testRegistroDeEstudo.getHoraInicial()).isEqualTo(UPDATED_HORA_INICIAL);
         assertThat(testRegistroDeEstudo.getHoraFinal()).isEqualTo(UPDATED_HORA_FINAL);
         assertThat(testRegistroDeEstudo.getDuracaoTempo()).isEqualTo(UPDATED_DURACAO_TEMPO);

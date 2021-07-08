@@ -103,6 +103,9 @@ public class EnderecoQueryService extends QueryService<Endereco> {
             if (criteria.getCep() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getCep(), Endereco_.cep));
             }
+            if (criteria.getNumero() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNumero(), Endereco_.numero));
+            }
         }
         return specification;
     }

@@ -32,6 +32,8 @@ public class PessoaCriteria implements Serializable, Criteria {
 
     private StringFilter email;
 
+    private StringFilter telefone;
+
     private LongFilter enderecoId;
 
     public PessoaCriteria() {
@@ -42,6 +44,7 @@ public class PessoaCriteria implements Serializable, Criteria {
         this.nome = other.nome == null ? null : other.nome.copy();
         this.sobrenome = other.sobrenome == null ? null : other.sobrenome.copy();
         this.email = other.email == null ? null : other.email.copy();
+        this.telefone = other.telefone == null ? null : other.telefone.copy();
         this.enderecoId = other.enderecoId == null ? null : other.enderecoId.copy();
     }
 
@@ -82,6 +85,14 @@ public class PessoaCriteria implements Serializable, Criteria {
         this.email = email;
     }
 
+    public StringFilter getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(StringFilter telefone) {
+        this.telefone = telefone;
+    }
+
     public LongFilter getEnderecoId() {
         return enderecoId;
     }
@@ -105,6 +116,7 @@ public class PessoaCriteria implements Serializable, Criteria {
             Objects.equals(nome, that.nome) &&
             Objects.equals(sobrenome, that.sobrenome) &&
             Objects.equals(email, that.email) &&
+            Objects.equals(telefone, that.telefone) &&
             Objects.equals(enderecoId, that.enderecoId);
     }
 
@@ -115,6 +127,7 @@ public class PessoaCriteria implements Serializable, Criteria {
         nome,
         sobrenome,
         email,
+        telefone,
         enderecoId
         );
     }
@@ -127,6 +140,7 @@ public class PessoaCriteria implements Serializable, Criteria {
                 (nome != null ? "nome=" + nome + ", " : "") +
                 (sobrenome != null ? "sobrenome=" + sobrenome + ", " : "") +
                 (email != null ? "email=" + email + ", " : "") +
+                (telefone != null ? "telefone=" + telefone + ", " : "") +
                 (enderecoId != null ? "enderecoId=" + enderecoId + ", " : "") +
             "}";
     }

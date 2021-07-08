@@ -1,7 +1,6 @@
 package com.appestudos.service.service.dto;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 
@@ -11,8 +10,6 @@ import java.io.Serializable;
 public class RegistroDeEstudoDTO implements Serializable {
     
     private Long id;
-
-    private LocalDate data;
 
     private Instant horaInicial;
 
@@ -33,14 +30,6 @@ public class RegistroDeEstudoDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
     }
 
     public Instant getHoraInicial() {
@@ -113,7 +102,6 @@ public class RegistroDeEstudoDTO implements Serializable {
     public String toString() {
         return "RegistroDeEstudoDTO{" +
             "id=" + getId() +
-            ", data='" + getData() + "'" +
             ", horaInicial='" + getHoraInicial() + "'" +
             ", horaFinal='" + getHoraFinal() + "'" +
             ", duracaoTempo='" + getDuracaoTempo() + "'" +

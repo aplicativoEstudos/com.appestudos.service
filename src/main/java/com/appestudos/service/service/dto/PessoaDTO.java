@@ -15,12 +15,18 @@ public class PessoaDTO implements Serializable {
     private byte[] foto;
 
     private String fotoContentType;
+    @NotNull
     private String nome;
 
+    @NotNull
     private String sobrenome;
 
     @NotNull
+    @Pattern(regexp = "^\\S+@\\S+$")
     private String email;
+
+    @Pattern(regexp = "\\(\\d{2}\\)\\s\\d{4,5}\\-\\d{4}")
+    private String telefone;
 
 
     private Long enderecoId;
@@ -73,6 +79,14 @@ public class PessoaDTO implements Serializable {
         this.email = email;
     }
 
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
     public Long getEnderecoId() {
         return enderecoId;
     }
@@ -107,6 +121,7 @@ public class PessoaDTO implements Serializable {
             ", nome='" + getNome() + "'" +
             ", sobrenome='" + getSobrenome() + "'" +
             ", email='" + getEmail() + "'" +
+            ", telefone='" + getTelefone() + "'" +
             ", enderecoId=" + getEnderecoId() +
             "}";
     }

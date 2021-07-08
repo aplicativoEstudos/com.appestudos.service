@@ -11,7 +11,6 @@ import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 import io.github.jhipster.service.filter.InstantFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
 
 /**
  * Criteria class for the {@link com.appestudos.service.domain.RegistroDeEstudo} entity. This class is used
@@ -27,8 +26,6 @@ public class RegistroDeEstudoCriteria implements Serializable, Criteria {
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
-
-    private LocalDateFilter data;
 
     private InstantFilter horaInicial;
 
@@ -47,7 +44,6 @@ public class RegistroDeEstudoCriteria implements Serializable, Criteria {
 
     public RegistroDeEstudoCriteria(RegistroDeEstudoCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.data = other.data == null ? null : other.data.copy();
         this.horaInicial = other.horaInicial == null ? null : other.horaInicial.copy();
         this.horaFinal = other.horaFinal == null ? null : other.horaFinal.copy();
         this.duracaoTempo = other.duracaoTempo == null ? null : other.duracaoTempo.copy();
@@ -67,14 +63,6 @@ public class RegistroDeEstudoCriteria implements Serializable, Criteria {
 
     public void setId(LongFilter id) {
         this.id = id;
-    }
-
-    public LocalDateFilter getData() {
-        return data;
-    }
-
-    public void setData(LocalDateFilter data) {
-        this.data = data;
     }
 
     public InstantFilter getHoraInicial() {
@@ -137,7 +125,6 @@ public class RegistroDeEstudoCriteria implements Serializable, Criteria {
         final RegistroDeEstudoCriteria that = (RegistroDeEstudoCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(data, that.data) &&
             Objects.equals(horaInicial, that.horaInicial) &&
             Objects.equals(horaFinal, that.horaFinal) &&
             Objects.equals(duracaoTempo, that.duracaoTempo) &&
@@ -150,7 +137,6 @@ public class RegistroDeEstudoCriteria implements Serializable, Criteria {
     public int hashCode() {
         return Objects.hash(
         id,
-        data,
         horaInicial,
         horaFinal,
         duracaoTempo,
@@ -165,7 +151,6 @@ public class RegistroDeEstudoCriteria implements Serializable, Criteria {
     public String toString() {
         return "RegistroDeEstudoCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (data != null ? "data=" + data + ", " : "") +
                 (horaInicial != null ? "horaInicial=" + horaInicial + ", " : "") +
                 (horaFinal != null ? "horaFinal=" + horaFinal + ", " : "") +
                 (duracaoTempo != null ? "duracaoTempo=" + duracaoTempo + ", " : "") +
