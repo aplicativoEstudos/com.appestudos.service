@@ -122,7 +122,7 @@ public class RegistroDeEstudoResource {
     @GetMapping("/registro-de-estudos")
     public ResponseEntity<List<RegistroDeEstudoDTO>> getAllRegistroDeEstudos(RegistroDeEstudoCriteria criteria, Pageable pageable) {
         log.debug("REST request to get RegistroDeEstudos by criteria: {}", criteria);
-        Page<RegistroDeEstudoDTO> page = registroDeEstudoQueryService.findByCriteria(criteria, pageable);
+        Page<RegistroDeEstudoDTO> page = registroDeEstudoQueryService.findByCriteriaLogado(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

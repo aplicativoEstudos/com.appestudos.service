@@ -1,6 +1,8 @@
 package com.appestudos.service.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.criteria.JoinType;
 
@@ -13,12 +15,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
+import io.github.jhipster.service.filter.LongFilter;
+import io.github.jhipster.service.filter.StringFilter;
 
-import com.appestudos.service.domain.RegistroDeEstudo;
 import com.appestudos.service.domain.*; // for static metamodels
 import com.appestudos.service.repository.RegistroDeEstudoRepository;
+import com.appestudos.service.security.SecurityUtils;
+import com.appestudos.service.service.dto.PessoaCriteria;
+import com.appestudos.service.service.dto.PessoaDTO;
 import com.appestudos.service.service.dto.RegistroDeEstudoCriteria;
 import com.appestudos.service.service.dto.RegistroDeEstudoDTO;
+import com.appestudos.service.service.mapper.PessoaMapper;
 import com.appestudos.service.service.mapper.RegistroDeEstudoMapper;
 
 /**
@@ -35,11 +42,20 @@ public class RegistroDeEstudoQueryService extends QueryService<RegistroDeEstudo>
 
     private final RegistroDeEstudoRepository registroDeEstudoRepository;
 
+    private final PessoaQueryService pessoaQueryService;
+	
+	private final PessoaMapper pessoaMapper;
+    
     private final RegistroDeEstudoMapper registroDeEstudoMapper;
+    
+    private static final String NAME = "name";
 
-    public RegistroDeEstudoQueryService(RegistroDeEstudoRepository registroDeEstudoRepository, RegistroDeEstudoMapper registroDeEstudoMapper) {
+    public RegistroDeEstudoQueryService(RegistroDeEstudoRepository registroDeEstudoRepository, RegistroDeEstudoMapper registroDeEstudoMapper,
+    		PessoaQueryService pessoaQueryService, PessoaMapper pessoaMapper) {
         this.registroDeEstudoRepository = registroDeEstudoRepository;
         this.registroDeEstudoMapper = registroDeEstudoMapper;
+        this.pessoaQueryService = pessoaQueryService;
+        this.pessoaMapper = pessoaMapper;
     }
 
     /**
@@ -67,6 +83,32 @@ public class RegistroDeEstudoQueryService extends QueryService<RegistroDeEstudo>
         return registroDeEstudoRepository.findAll(specification, page)
             .map(registroDeEstudoMapper::toDto);
     }
+    
+    @Transactional(readOnly = true)
+    public Page<RegistroDeEstudoDTO> findByCriteriaLogado(RegistroDeEstudoCriteria criteria, Pageable page) {
+        log.debug("find by criteria : {}, page: {}", criteria, page);
+        criteria.setPessoaId(new LongFilter());
+        criteria.getPessoaId().setEquals(pessoaLogada().getId());
+        final Specification<RegistroDeEstudo> specification = createSpecification(criteria);
+        return registroDeEstudoRepository.findAll(specification, page)
+            .map(registroDeEstudoMapper::toDto);
+    }
+    
+	private Pessoa pessoaLogada() {
+		//        Usuario logado
+        Optional<Map<String, String>> currentLoginMatricula = SecurityUtils.getCurrentLoginMatricula();
+        PessoaCriteria pessoaCriteria = new PessoaCriteria();
+        pessoaCriteria.setNome(new StringFilter());
+        pessoaCriteria.getNome().setEquals(currentLoginMatricula.get().get(NAME));
+        Pessoa pessoa = new Pessoa();
+        List<PessoaDTO> pessoasDto = pessoaQueryService.findByCriteria(pessoaCriteria);
+        if(!pessoasDto.isEmpty()) {
+        	pessoa = pessoaMapper.toEntity(pessoasDto.get(0));
+        }else {
+        	throw new RuntimeException("Não existe pessoa para esse usuário");
+        }
+		return pessoa;
+	}
 
     /**
      * Return the number of matching entities in the database.

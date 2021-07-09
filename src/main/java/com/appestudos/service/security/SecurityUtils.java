@@ -49,6 +49,25 @@ public final class SecurityUtils {
         }
         return null;
     }
+    
+    public static Optional<Map<String, String>> getCurrentLoginMatricula() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Map<String, String> retorno = new HashMap<String, String>();
+        Object principal = securityContext.getAuthentication().getPrincipal();
+        if (securityContext.getAuthentication() instanceof JwtAuthenticationToken) {
+            retorno.put("preferred_username", (String) ((JwtAuthenticationToken) securityContext.getAuthentication())
+                    .getToken().getClaims().get("preferred_username"));
+            retorno.put("name", (String) ((JwtAuthenticationToken) securityContext.getAuthentication()).getToken()
+                    .getClaims().get("given_name"));
+        } else if (principal instanceof DefaultOidcUser) {
+            Map<String, Object> attributes = ((DefaultOidcUser) principal).getAttributes();
+            if (attributes.containsKey("preferred_username")) {
+                retorno.put("preferred_username", (String) attributes.get("preferred_username"));
+                retorno.put("name", (String) attributes.get("name"));
+            }
+        }
+        return Optional.ofNullable(retorno);
+    }
 
 
     /**
