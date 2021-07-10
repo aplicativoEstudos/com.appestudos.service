@@ -27,6 +27,11 @@
       "fieldType": "String",
       "fieldValidateRules": ["pattern"],
       "fieldValidateRulesPattern": "\\(\\d{2}\\)\\s\\d{4,5}\\-\\d{4}"
+    },
+    {
+      "fieldName": "idUser",
+      "fieldType": "UUID",
+      "fieldValidateRules": ["unique"]
     }
   ],
   "relationships": [

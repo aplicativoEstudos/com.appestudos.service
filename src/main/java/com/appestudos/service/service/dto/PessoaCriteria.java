@@ -10,6 +10,7 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.UUIDFilter;
 
 /**
  * Criteria class for the {@link com.appestudos.service.domain.Pessoa} entity. This class is used
@@ -34,6 +35,8 @@ public class PessoaCriteria implements Serializable, Criteria {
 
     private StringFilter telefone;
 
+    private UUIDFilter idUser;
+
     private LongFilter enderecoId;
 
     public PessoaCriteria() {
@@ -45,6 +48,7 @@ public class PessoaCriteria implements Serializable, Criteria {
         this.sobrenome = other.sobrenome == null ? null : other.sobrenome.copy();
         this.email = other.email == null ? null : other.email.copy();
         this.telefone = other.telefone == null ? null : other.telefone.copy();
+        this.idUser = other.idUser == null ? null : other.idUser.copy();
         this.enderecoId = other.enderecoId == null ? null : other.enderecoId.copy();
     }
 
@@ -93,6 +97,14 @@ public class PessoaCriteria implements Serializable, Criteria {
         this.telefone = telefone;
     }
 
+    public UUIDFilter getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(UUIDFilter idUser) {
+        this.idUser = idUser;
+    }
+
     public LongFilter getEnderecoId() {
         return enderecoId;
     }
@@ -117,6 +129,7 @@ public class PessoaCriteria implements Serializable, Criteria {
             Objects.equals(sobrenome, that.sobrenome) &&
             Objects.equals(email, that.email) &&
             Objects.equals(telefone, that.telefone) &&
+            Objects.equals(idUser, that.idUser) &&
             Objects.equals(enderecoId, that.enderecoId);
     }
 
@@ -128,6 +141,7 @@ public class PessoaCriteria implements Serializable, Criteria {
         sobrenome,
         email,
         telefone,
+        idUser,
         enderecoId
         );
     }
@@ -141,6 +155,7 @@ public class PessoaCriteria implements Serializable, Criteria {
                 (sobrenome != null ? "sobrenome=" + sobrenome + ", " : "") +
                 (email != null ? "email=" + email + ", " : "") +
                 (telefone != null ? "telefone=" + telefone + ", " : "") +
+                (idUser != null ? "idUser=" + idUser + ", " : "") +
                 (enderecoId != null ? "enderecoId=" + enderecoId + ", " : "") +
             "}";
     }

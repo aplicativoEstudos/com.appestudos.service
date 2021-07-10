@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -49,11 +50,14 @@ public class PessoaResourceIT {
     private static final String DEFAULT_SOBRENOME = "AAAAAAAAAA";
     private static final String UPDATED_SOBRENOME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_EMAIL = "Q4#Q@.xx";
-    private static final String UPDATED_EMAIL = "dUKZ@~";
+    private static final String DEFAULT_EMAIL = "ui'0=o@ukP";
+    private static final String UPDATED_EMAIL = "Lz$$'E@v";
 
-    private static final String DEFAULT_TELEFONE = "(64) 6390-8196";
-    private static final String UPDATED_TELEFONE = "(51) 5214-5195";
+    private static final String DEFAULT_TELEFONE = "(60) 1717-7284";
+    private static final String UPDATED_TELEFONE = "(22) 7164-4661";
+
+    private static final UUID DEFAULT_ID_USER = UUID.randomUUID();
+    private static final UUID UPDATED_ID_USER = UUID.randomUUID();
 
     @Autowired
     private PessoaRepository pessoaRepository;
@@ -88,7 +92,8 @@ public class PessoaResourceIT {
             .nome(DEFAULT_NOME)
             .sobrenome(DEFAULT_SOBRENOME)
             .email(DEFAULT_EMAIL)
-            .telefone(DEFAULT_TELEFONE);
+            .telefone(DEFAULT_TELEFONE)
+            .idUser(DEFAULT_ID_USER);
         return pessoa;
     }
     /**
@@ -104,7 +109,8 @@ public class PessoaResourceIT {
             .nome(UPDATED_NOME)
             .sobrenome(UPDATED_SOBRENOME)
             .email(UPDATED_EMAIL)
-            .telefone(UPDATED_TELEFONE);
+            .telefone(UPDATED_TELEFONE)
+            .idUser(UPDATED_ID_USER);
         return pessoa;
     }
 
@@ -134,6 +140,7 @@ public class PessoaResourceIT {
         assertThat(testPessoa.getSobrenome()).isEqualTo(DEFAULT_SOBRENOME);
         assertThat(testPessoa.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testPessoa.getTelefone()).isEqualTo(DEFAULT_TELEFONE);
+        assertThat(testPessoa.getIdUser()).isEqualTo(DEFAULT_ID_USER);
     }
 
     @Test
@@ -233,7 +240,8 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME)))
             .andExpect(jsonPath("$.[*].sobrenome").value(hasItem(DEFAULT_SOBRENOME)))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(DEFAULT_TELEFONE)));
+            .andExpect(jsonPath("$.[*].telefone").value(hasItem(DEFAULT_TELEFONE)))
+            .andExpect(jsonPath("$.[*].idUser").value(hasItem(DEFAULT_ID_USER.toString())));
     }
     
     @Test
@@ -252,7 +260,8 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME))
             .andExpect(jsonPath("$.sobrenome").value(DEFAULT_SOBRENOME))
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
-            .andExpect(jsonPath("$.telefone").value(DEFAULT_TELEFONE));
+            .andExpect(jsonPath("$.telefone").value(DEFAULT_TELEFONE))
+            .andExpect(jsonPath("$.idUser").value(DEFAULT_ID_USER.toString()));
     }
 
 
@@ -589,6 +598,58 @@ public class PessoaResourceIT {
 
     @Test
     @Transactional
+    public void getAllPessoasByIdUserIsEqualToSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where idUser equals to DEFAULT_ID_USER
+        defaultPessoaShouldBeFound("idUser.equals=" + DEFAULT_ID_USER);
+
+        // Get all the pessoaList where idUser equals to UPDATED_ID_USER
+        defaultPessoaShouldNotBeFound("idUser.equals=" + UPDATED_ID_USER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPessoasByIdUserIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where idUser not equals to DEFAULT_ID_USER
+        defaultPessoaShouldNotBeFound("idUser.notEquals=" + DEFAULT_ID_USER);
+
+        // Get all the pessoaList where idUser not equals to UPDATED_ID_USER
+        defaultPessoaShouldBeFound("idUser.notEquals=" + UPDATED_ID_USER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPessoasByIdUserIsInShouldWork() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where idUser in DEFAULT_ID_USER or UPDATED_ID_USER
+        defaultPessoaShouldBeFound("idUser.in=" + DEFAULT_ID_USER + "," + UPDATED_ID_USER);
+
+        // Get all the pessoaList where idUser equals to UPDATED_ID_USER
+        defaultPessoaShouldNotBeFound("idUser.in=" + UPDATED_ID_USER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPessoasByIdUserIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        // Get all the pessoaList where idUser is not null
+        defaultPessoaShouldBeFound("idUser.specified=true");
+
+        // Get all the pessoaList where idUser is null
+        defaultPessoaShouldNotBeFound("idUser.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllPessoasByEnderecoIsEqualToSomething() throws Exception {
         // Initialize the database
         pessoaRepository.saveAndFlush(pessoa);
@@ -619,7 +680,8 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME)))
             .andExpect(jsonPath("$.[*].sobrenome").value(hasItem(DEFAULT_SOBRENOME)))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
-            .andExpect(jsonPath("$.[*].telefone").value(hasItem(DEFAULT_TELEFONE)));
+            .andExpect(jsonPath("$.[*].telefone").value(hasItem(DEFAULT_TELEFONE)))
+            .andExpect(jsonPath("$.[*].idUser").value(hasItem(DEFAULT_ID_USER.toString())));
 
         // Check, that the count call also returns 1
         restPessoaMockMvc.perform(get("/api/pessoas/count?sort=id,desc&" + filter))
@@ -671,7 +733,8 @@ public class PessoaResourceIT {
             .nome(UPDATED_NOME)
             .sobrenome(UPDATED_SOBRENOME)
             .email(UPDATED_EMAIL)
-            .telefone(UPDATED_TELEFONE);
+            .telefone(UPDATED_TELEFONE)
+            .idUser(UPDATED_ID_USER);
         PessoaDTO pessoaDTO = pessoaMapper.toDto(updatedPessoa);
 
         restPessoaMockMvc.perform(put("/api/pessoas").with(csrf())
@@ -689,6 +752,7 @@ public class PessoaResourceIT {
         assertThat(testPessoa.getSobrenome()).isEqualTo(UPDATED_SOBRENOME);
         assertThat(testPessoa.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testPessoa.getTelefone()).isEqualTo(UPDATED_TELEFONE);
+        assertThat(testPessoa.getIdUser()).isEqualTo(UPDATED_ID_USER);
     }
 
     @Test

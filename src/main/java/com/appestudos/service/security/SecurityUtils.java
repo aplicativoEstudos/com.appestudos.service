@@ -59,11 +59,16 @@ public final class SecurityUtils {
                     .getToken().getClaims().get("preferred_username"));
             retorno.put("name", (String) ((JwtAuthenticationToken) securityContext.getAuthentication()).getToken()
                     .getClaims().get("given_name"));
+            retorno.put("sobre_nome", (String) ((JwtAuthenticationToken) securityContext.getAuthentication()).getToken()
+                    .getClaims().get("family_name"));
+            retorno.put("id_user", (String) ((JwtAuthenticationToken) securityContext.getAuthentication()).getToken()
+                    .getClaims().get("sub"));
         } else if (principal instanceof DefaultOidcUser) {
             Map<String, Object> attributes = ((DefaultOidcUser) principal).getAttributes();
             if (attributes.containsKey("preferred_username")) {
                 retorno.put("preferred_username", (String) attributes.get("preferred_username"));
-                retorno.put("name", (String) attributes.get("name"));
+                retorno.put("name", (String) attributes.get("given_name"));
+                retorno.put("id_user", (String) attributes.get("family_name"));
             }
         }
         return Optional.ofNullable(retorno);

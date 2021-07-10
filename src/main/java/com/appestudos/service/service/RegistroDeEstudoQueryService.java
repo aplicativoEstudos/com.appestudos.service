@@ -3,6 +3,7 @@ package com.appestudos.service.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.persistence.criteria.JoinType;
 
@@ -17,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.UUIDFilter;
 
 import com.appestudos.service.domain.*; // for static metamodels
+import com.appestudos.service.repository.PessoaRepository;
 import com.appestudos.service.repository.RegistroDeEstudoRepository;
 import com.appestudos.service.security.SecurityUtils;
 import com.appestudos.service.service.dto.PessoaCriteria;
@@ -35,8 +38,16 @@ import com.appestudos.service.service.mapper.RegistroDeEstudoMapper;
  * It returns a {@link List} of {@link RegistroDeEstudoDTO} or a {@link Page} of {@link RegistroDeEstudoDTO} which fulfills the criteria.
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RegistroDeEstudoQueryService extends QueryService<RegistroDeEstudo> {
+	
+    private static final String SOBRE_NOME = "sobre_nome";
+
+	private static final String SUB = "id_user";
+    
+	private static final String PREFERRED_USERNAME = "preferred_username";
+	
+	private static final String NAME = "name";
 
     private final Logger log = LoggerFactory.getLogger(RegistroDeEstudoQueryService.class);
 
@@ -45,17 +56,19 @@ public class RegistroDeEstudoQueryService extends QueryService<RegistroDeEstudo>
     private final PessoaQueryService pessoaQueryService;
 	
 	private final PessoaMapper pessoaMapper;
+	
+	private final PessoaRepository pessoaRepository;
     
     private final RegistroDeEstudoMapper registroDeEstudoMapper;
-    
-    private static final String NAME = "name";
 
     public RegistroDeEstudoQueryService(RegistroDeEstudoRepository registroDeEstudoRepository, RegistroDeEstudoMapper registroDeEstudoMapper,
-    		PessoaQueryService pessoaQueryService, PessoaMapper pessoaMapper) {
+    		PessoaQueryService pessoaQueryService, PessoaMapper pessoaMapper,
+    		PessoaRepository pessoaRepository) {
         this.registroDeEstudoRepository = registroDeEstudoRepository;
         this.registroDeEstudoMapper = registroDeEstudoMapper;
         this.pessoaQueryService = pessoaQueryService;
         this.pessoaMapper = pessoaMapper;
+        this.pessoaRepository = pessoaRepository;
     }
 
     /**
@@ -84,7 +97,7 @@ public class RegistroDeEstudoQueryService extends QueryService<RegistroDeEstudo>
             .map(registroDeEstudoMapper::toDto);
     }
     
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public Page<RegistroDeEstudoDTO> findByCriteriaLogado(RegistroDeEstudoCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         criteria.setPessoaId(new LongFilter());
@@ -95,18 +108,20 @@ public class RegistroDeEstudoQueryService extends QueryService<RegistroDeEstudo>
     }
     
 	private Pessoa pessoaLogada() {
-		//        Usuario logado
-        Optional<Map<String, String>> currentLoginMatricula = SecurityUtils.getCurrentLoginMatricula();
-        PessoaCriteria pessoaCriteria = new PessoaCriteria();
-        pessoaCriteria.setNome(new StringFilter());
-        pessoaCriteria.getNome().setEquals(currentLoginMatricula.get().get(NAME));
-        Pessoa pessoa = new Pessoa();
-        List<PessoaDTO> pessoasDto = pessoaQueryService.findByCriteria(pessoaCriteria);
-        if(!pessoasDto.isEmpty()) {
-        	pessoa = pessoaMapper.toEntity(pessoasDto.get(0));
-        }else {
-        	throw new RuntimeException("Não existe pessoa para esse usuário");
-        }
+//      Usuario logado
+      Optional<Map<String, String>> currentLoginMatricula = SecurityUtils.getCurrentLoginMatricula();
+      Pessoa pessoa = new Pessoa();
+      Optional<Pessoa> pessoaOpt = pessoaRepository.findByIdUser(UUID.fromString(currentLoginMatricula.get().get(SUB)));
+      if(pessoaOpt.isPresent()) {
+      	pessoa = pessoaOpt.get();
+      }else {
+      	pessoa = new Pessoa();
+      	pessoa.setEmail(currentLoginMatricula.get().get(PREFERRED_USERNAME));
+      	pessoa.setNome(currentLoginMatricula.get().get(NAME));
+      	pessoa.setSobrenome(currentLoginMatricula.get().get(SOBRE_NOME));
+      	pessoa.setIdUser(UUID.fromString(currentLoginMatricula.get().get(SUB)));
+      	pessoaRepository.save(pessoa);
+      }
 		return pessoa;
 	}
 

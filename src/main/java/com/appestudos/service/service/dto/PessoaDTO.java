@@ -2,6 +2,7 @@ package com.appestudos.service.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.UUID;
 import javax.persistence.Lob;
 
 /**
@@ -27,6 +28,9 @@ public class PessoaDTO implements Serializable {
 
     @Pattern(regexp = "\\(\\d{2}\\)\\s\\d{4,5}\\-\\d{4}")
     private String telefone;
+
+    
+    private UUID idUser;
 
 
     private Long enderecoId;
@@ -87,6 +91,14 @@ public class PessoaDTO implements Serializable {
         this.telefone = telefone;
     }
 
+    public UUID getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(UUID idUser) {
+        this.idUser = idUser;
+    }
+
     public Long getEnderecoId() {
         return enderecoId;
     }
@@ -122,6 +134,7 @@ public class PessoaDTO implements Serializable {
             ", sobrenome='" + getSobrenome() + "'" +
             ", email='" + getEmail() + "'" +
             ", telefone='" + getTelefone() + "'" +
+            ", idUser='" + getIdUser() + "'" +
             ", enderecoId=" + getEnderecoId() +
             "}";
     }

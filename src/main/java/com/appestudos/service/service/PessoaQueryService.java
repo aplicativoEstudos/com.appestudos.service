@@ -103,6 +103,9 @@ public class PessoaQueryService extends QueryService<Pessoa> {
             if (criteria.getTelefone() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getTelefone(), Pessoa_.telefone));
             }
+            if (criteria.getIdUser() != null) {
+                specification = specification.and(buildSpecification(criteria.getIdUser(), Pessoa_.idUser));
+            }
             if (criteria.getEnderecoId() != null) {
                 specification = specification.and(buildSpecification(criteria.getEnderecoId(),
                     root -> root.join(Pessoa_.endereco, JoinType.LEFT).get(Endereco_.id)));

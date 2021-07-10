@@ -1,11 +1,13 @@
 package com.appestudos.service.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * A Pessoa.
@@ -43,6 +45,11 @@ public class Pessoa implements Serializable {
     @Pattern(regexp = "\\(\\d{2}\\)\\s\\d{4,5}\\-\\d{4}")
     @Column(name = "telefone")
     private String telefone;
+
+    
+    @Type(type = "uuid-char")
+    @Column(name = "id_user", length = 36, unique = true)
+    private UUID idUser;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "pessoas", allowSetters = true)
@@ -135,6 +142,19 @@ public class Pessoa implements Serializable {
         this.telefone = telefone;
     }
 
+    public UUID getIdUser() {
+        return idUser;
+    }
+
+    public Pessoa idUser(UUID idUser) {
+        this.idUser = idUser;
+        return this;
+    }
+
+    public void setIdUser(UUID idUser) {
+        this.idUser = idUser;
+    }
+
     public Endereco getEndereco() {
         return endereco;
     }
@@ -176,6 +196,7 @@ public class Pessoa implements Serializable {
             ", sobrenome='" + getSobrenome() + "'" +
             ", email='" + getEmail() + "'" +
             ", telefone='" + getTelefone() + "'" +
+            ", idUser='" + getIdUser() + "'" +
             "}";
     }
 }
