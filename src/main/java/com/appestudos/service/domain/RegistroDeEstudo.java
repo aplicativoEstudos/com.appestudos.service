@@ -24,9 +24,6 @@ public class RegistroDeEstudo implements Serializable {
     @Column(name = "hora_inicial")
     private Instant horaInicial;
 
-    @Column(name = "hora_final")
-    private Instant horaFinal;
-
     @Column(name = "duracao_tempo")
     private String duracaoTempo;
 
@@ -65,19 +62,6 @@ public class RegistroDeEstudo implements Serializable {
 
     public void setHoraInicial(Instant horaInicial) {
         this.horaInicial = horaInicial;
-    }
-
-    public Instant getHoraFinal() {
-        return horaFinal;
-    }
-
-    public RegistroDeEstudo horaFinal(Instant horaFinal) {
-        this.horaFinal = horaFinal;
-        return this;
-    }
-
-    public void setHoraFinal(Instant horaFinal) {
-        this.horaFinal = horaFinal;
     }
 
     public String getDuracaoTempo() {
@@ -155,7 +139,6 @@ public class RegistroDeEstudo implements Serializable {
         return "RegistroDeEstudo{" +
             "id=" + getId() +
             ", horaInicial='" + getHoraInicial() + "'" +
-            ", horaFinal='" + getHoraFinal() + "'" +
             ", duracaoTempo='" + getDuracaoTempo() + "'" +
             "}";
     }

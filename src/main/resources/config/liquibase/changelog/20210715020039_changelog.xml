@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
-    <changeSet author="8161 (generated)" id="1625620491855-1">
+    <changeSet author="8161 (generated)" id="1626314452410-1">
         <createTable tableName="area">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="areaPK"/>
@@ -8,7 +8,7 @@
             <column name="noma" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-2">
+    <changeSet author="8161 (generated)" id="1626314452410-2">
         <createTable tableName="disciplina">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="disciplinaPK"/>
@@ -16,7 +16,7 @@
             <column name="nome_disciplina" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-3">
+    <changeSet author="8161 (generated)" id="1626314452410-3">
         <createTable tableName="endereco">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="enderecoPK"/>
@@ -30,19 +30,20 @@
             <column name="cidade" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="numero" type="INT"/>
             <column name="rua" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-4">
+    <changeSet author="8161 (generated)" id="1626314452410-4">
         <createTable tableName="jhi_authority">
             <column name="name" type="VARCHAR(50)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="jhi_authorityPK"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-5">
+    <changeSet author="8161 (generated)" id="1626314452410-5">
         <createTable tableName="jhi_persistent_audit_event">
             <column autoIncrement="true" name="event_id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="jhi_persistent_audit_eventPK"/>
@@ -54,7 +55,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-6">
+    <changeSet author="8161 (generated)" id="1626314452410-6">
         <createTable tableName="jhi_persistent_audit_evt_data">
             <column name="event_id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -65,7 +66,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-7">
+    <changeSet author="8161 (generated)" id="1626314452410-7">
         <createTable tableName="jhi_user">
             <column name="id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="jhi_userPK"/>
@@ -89,7 +90,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-8">
+    <changeSet author="8161 (generated)" id="1626314452410-8">
         <createTable tableName="jhi_user_authority">
             <column name="user_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -99,7 +100,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-9">
+    <changeSet author="8161 (generated)" id="1626314452410-9">
         <createTable tableName="pessoa">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pessoaPK"/>
@@ -109,51 +110,63 @@
             </column>
             <column name="foto" type="LONGBLOB"/>
             <column name="foto_content_type" type="VARCHAR(255)"/>
-            <column name="nome" type="VARCHAR(255)"/>
-            <column name="sobrenome" type="VARCHAR(255)"/>
+            <column name="id_user" type="VARCHAR(36)"/>
+            <column name="nome" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sobrenome" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="telefone" type="VARCHAR(255)"/>
             <column name="endereco_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-10">
+    <changeSet author="8161 (generated)" id="1626314452410-10">
         <createTable tableName="registro_de_estudo">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="registro_de_estudoPK"/>
             </column>
-            <column name="data" type="date"/>
-            <column name="hora_final" type="BIGINT"/>
-            <column name="hora_inicial" type="BIGINT"/>
-            <column name="area_id" type="BIGINT"/>
-            <column name="disciplina_id" type="BIGINT"/>
+            <column name="duracao_tempo" type="VARCHAR(255)"/>
+            <column name="hora_inicial" type="datetime(6)"/>
+            <column name="area_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="disciplina_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="pessoa_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-11">
+    <changeSet author="8161 (generated)" id="1626314452410-11">
         <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-12">
+    <changeSet author="8161 (generated)" id="1626314452410-12">
         <addUniqueConstraint columnNames="login" constraintName="UC_JHI_USERLOGIN_COL" tableName="jhi_user"/>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-13">
+    <changeSet author="8161 (generated)" id="1626314452410-13">
+        <addUniqueConstraint columnNames="id_user" constraintName="UC_PESSOAID_USER_COL" tableName="pessoa"/>
+    </changeSet>
+    <changeSet author="8161 (generated)" id="1626314452410-14">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority" constraintName="FK290okww5jujghp4el5i7mgwu0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-14">
+    <changeSet author="8161 (generated)" id="1626314452410-15">
         <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="jhi_persistent_audit_evt_data" constraintName="FK2ehnyx2si4tjd2nt4q7y40v8m" deferrable="false" initiallyDeferred="false" referencedColumnNames="event_id" referencedTableName="jhi_persistent_audit_event" validate="true"/>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-15">
+    <changeSet author="8161 (generated)" id="1626314452410-16">
         <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority" constraintName="FK4psxl0jtx6nr7rhqbynr6itoc" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="jhi_authority" validate="true"/>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-16">
+    <changeSet author="8161 (generated)" id="1626314452410-17">
         <addForeignKeyConstraint baseColumnNames="endereco_id" baseTableName="pessoa" constraintName="FKei4abnsw085kx27j89rp796ny" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="endereco" validate="true"/>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-17">
+    <changeSet author="8161 (generated)" id="1626314452410-18">
         <addForeignKeyConstraint baseColumnNames="disciplina_id" baseTableName="registro_de_estudo" constraintName="FKfjnnenfcxx049jicuqok74uql" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="disciplina" validate="true"/>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-18">
+    <changeSet author="8161 (generated)" id="1626314452410-19">
         <addForeignKeyConstraint baseColumnNames="area_id" baseTableName="registro_de_estudo" constraintName="FKjukp3vki14h7fe6atk9y1y5uk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area" validate="true"/>
     </changeSet>
-    <changeSet author="8161 (generated)" id="1625620491855-19">
+    <changeSet author="8161 (generated)" id="1626314452410-20">
         <addForeignKeyConstraint baseColumnNames="pessoa_id" baseTableName="registro_de_estudo" constraintName="FKlwbnbf2i8acel8tmop1ugu85r" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="pessoa" validate="true"/>
     </changeSet>
 </databaseChangeLog>

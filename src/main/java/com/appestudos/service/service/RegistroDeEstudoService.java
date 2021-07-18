@@ -44,8 +44,8 @@ public interface RegistroDeEstudoService {
      */
     void delete(Long id);
     
-    RegistroDeEstudoDTO start(RegistroDeEstudoDTO registroDeEstudoDTO);
-    
-    
-    RegistroDeEstudoDTO stop(RegistroDeEstudoDTO registroDeEstudoDTO);
+//    RegistroDeEstudoDTO start(RegistroDeEstudoDTO registroDeEstudoDTO);
+//    
+//    
+//    RegistroDeEstudoDTO stop(RegistroDeEstudoDTO registroDeEstudoDTO);
 }

@@ -19,9 +19,6 @@
             <column name="hora_inicial" type="datetime">
                 <constraints nullable="true" />
             </column>
-            <column name="hora_final" type="datetime">
-                <constraints nullable="true" />
-            </column>
             <column name="duracao_tempo" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -36,8 +33,7 @@
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-        <dropDefaultValue tableName="registro_de_estudo" columnName="hora_inicial" columnDataType="datetime"/>
-        <dropDefaultValue tableName="registro_de_estudo" columnName="hora_final" columnDataType="datetime"/>
+        <dropDefaultValue tableName="registro_de_estudo" columnName="hora_inicial" columnDataType="datetime"/>       
     </changeSet>
 
     <changeSet id="20210705014651-1-relations" author="jhipster">
@@ -60,7 +56,6 @@
                   tableName="registro_de_estudo">
             <column name="id" type="numeric"/>
             <column name="hora_inicial" type="datetime"/>
-            <column name="hora_final" type="datetime"/>
             <column name="duracao_tempo" type="string"/>
             <column name="area_id" type="numeric"/>
             <column name="disciplina_id" type="numeric"/>

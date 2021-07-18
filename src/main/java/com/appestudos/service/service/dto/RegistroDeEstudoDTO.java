@@ -13,16 +13,20 @@ public class RegistroDeEstudoDTO implements Serializable {
 
     private Instant horaInicial;
 
-    private Instant horaFinal;
-
     private String duracaoTempo;
 
 
     private Long areaId;
+    
+    private AreaDTO area;
 
     private Long disciplinaId;
+    
+    private DisciplinaDTO disciplina;
 
     private Long pessoaId;
+    
+    private PessoaDTO pessoa;
     
     public Long getId() {
         return id;
@@ -38,14 +42,6 @@ public class RegistroDeEstudoDTO implements Serializable {
 
     public void setHoraInicial(Instant horaInicial) {
         this.horaInicial = horaInicial;
-    }
-
-    public Instant getHoraFinal() {
-        return horaFinal;
-    }
-
-    public void setHoraFinal(Instant horaFinal) {
-        this.horaFinal = horaFinal;
     }
 
     public String getDuracaoTempo() {
@@ -79,8 +75,32 @@ public class RegistroDeEstudoDTO implements Serializable {
     public void setPessoaId(Long pessoaId) {
         this.pessoaId = pessoaId;
     }
+    
+    public AreaDTO getArea() {
+		return area;
+	}
 
-    @Override
+	public void setArea(AreaDTO area) {
+		this.area = area;
+	}
+
+	public DisciplinaDTO getDisciplina() {
+		return disciplina;
+	}
+
+	public void setDisciplina(DisciplinaDTO disciplina) {
+		this.disciplina = disciplina;
+	}
+
+	public PessoaDTO getPessoa() {
+		return pessoa;
+	}
+
+	public void setPessoa(PessoaDTO pessoa) {
+		this.pessoa = pessoa;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -103,7 +123,6 @@ public class RegistroDeEstudoDTO implements Serializable {
         return "RegistroDeEstudoDTO{" +
             "id=" + getId() +
             ", horaInicial='" + getHoraInicial() + "'" +
-            ", horaFinal='" + getHoraFinal() + "'" +
             ", duracaoTempo='" + getDuracaoTempo() + "'" +
             ", areaId=" + getAreaId() +
             ", disciplinaId=" + getDisciplinaId() +

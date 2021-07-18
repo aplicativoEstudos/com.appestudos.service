@@ -151,9 +151,6 @@ public class RegistroDeEstudoQueryService extends QueryService<RegistroDeEstudo>
             if (criteria.getHoraInicial() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getHoraInicial(), RegistroDeEstudo_.horaInicial));
             }
-            if (criteria.getHoraFinal() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getHoraFinal(), RegistroDeEstudo_.horaFinal));
-            }
             if (criteria.getDuracaoTempo() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDuracaoTempo(), RegistroDeEstudo_.duracaoTempo));
             }

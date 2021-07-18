@@ -44,9 +44,6 @@ public class RegistroDeEstudoResourceIT {
     private static final Instant DEFAULT_HORA_INICIAL = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_HORA_INICIAL = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Instant DEFAULT_HORA_FINAL = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_HORA_FINAL = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
     private static final String DEFAULT_DURACAO_TEMPO = "AAAAAAAAAA";
     private static final String UPDATED_DURACAO_TEMPO = "BBBBBBBBBB";
 
@@ -79,7 +76,6 @@ public class RegistroDeEstudoResourceIT {
     public static RegistroDeEstudo createEntity(EntityManager em) {
         RegistroDeEstudo registroDeEstudo = new RegistroDeEstudo()
             .horaInicial(DEFAULT_HORA_INICIAL)
-            .horaFinal(DEFAULT_HORA_FINAL)
             .duracaoTempo(DEFAULT_DURACAO_TEMPO);
         // Add required entity
         Area area;
@@ -122,7 +118,6 @@ public class RegistroDeEstudoResourceIT {
     public static RegistroDeEstudo createUpdatedEntity(EntityManager em) {
         RegistroDeEstudo registroDeEstudo = new RegistroDeEstudo()
             .horaInicial(UPDATED_HORA_INICIAL)
-            .horaFinal(UPDATED_HORA_FINAL)
             .duracaoTempo(UPDATED_DURACAO_TEMPO);
         // Add required entity
         Area area;
@@ -178,7 +173,6 @@ public class RegistroDeEstudoResourceIT {
         assertThat(registroDeEstudoList).hasSize(databaseSizeBeforeCreate + 1);
         RegistroDeEstudo testRegistroDeEstudo = registroDeEstudoList.get(registroDeEstudoList.size() - 1);
         assertThat(testRegistroDeEstudo.getHoraInicial()).isEqualTo(DEFAULT_HORA_INICIAL);
-        assertThat(testRegistroDeEstudo.getHoraFinal()).isEqualTo(DEFAULT_HORA_FINAL);
         assertThat(testRegistroDeEstudo.getDuracaoTempo()).isEqualTo(DEFAULT_DURACAO_TEMPO);
     }
 
@@ -215,7 +209,6 @@ public class RegistroDeEstudoResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(registroDeEstudo.getId().intValue())))
             .andExpect(jsonPath("$.[*].horaInicial").value(hasItem(DEFAULT_HORA_INICIAL.toString())))
-            .andExpect(jsonPath("$.[*].horaFinal").value(hasItem(DEFAULT_HORA_FINAL.toString())))
             .andExpect(jsonPath("$.[*].duracaoTempo").value(hasItem(DEFAULT_DURACAO_TEMPO)));
     }
     
@@ -231,7 +224,6 @@ public class RegistroDeEstudoResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(registroDeEstudo.getId().intValue()))
             .andExpect(jsonPath("$.horaInicial").value(DEFAULT_HORA_INICIAL.toString()))
-            .andExpect(jsonPath("$.horaFinal").value(DEFAULT_HORA_FINAL.toString()))
             .andExpect(jsonPath("$.duracaoTempo").value(DEFAULT_DURACAO_TEMPO));
     }
 
@@ -314,10 +306,9 @@ public class RegistroDeEstudoResourceIT {
         registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
 
         // Get all the registroDeEstudoList where horaFinal equals to DEFAULT_HORA_FINAL
-        defaultRegistroDeEstudoShouldBeFound("horaFinal.equals=" + DEFAULT_HORA_FINAL);
+
 
         // Get all the registroDeEstudoList where horaFinal equals to UPDATED_HORA_FINAL
-        defaultRegistroDeEstudoShouldNotBeFound("horaFinal.equals=" + UPDATED_HORA_FINAL);
     }
 
     @Test
@@ -327,10 +318,8 @@ public class RegistroDeEstudoResourceIT {
         registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
 
         // Get all the registroDeEstudoList where horaFinal not equals to DEFAULT_HORA_FINAL
-        defaultRegistroDeEstudoShouldNotBeFound("horaFinal.notEquals=" + DEFAULT_HORA_FINAL);
 
         // Get all the registroDeEstudoList where horaFinal not equals to UPDATED_HORA_FINAL
-        defaultRegistroDeEstudoShouldBeFound("horaFinal.notEquals=" + UPDATED_HORA_FINAL);
     }
 
     @Test
@@ -340,10 +329,8 @@ public class RegistroDeEstudoResourceIT {
         registroDeEstudoRepository.saveAndFlush(registroDeEstudo);
 
         // Get all the registroDeEstudoList where horaFinal in DEFAULT_HORA_FINAL or UPDATED_HORA_FINAL
-        defaultRegistroDeEstudoShouldBeFound("horaFinal.in=" + DEFAULT_HORA_FINAL + "," + UPDATED_HORA_FINAL);
 
         // Get all the registroDeEstudoList where horaFinal equals to UPDATED_HORA_FINAL
-        defaultRegistroDeEstudoShouldNotBeFound("horaFinal.in=" + UPDATED_HORA_FINAL);
     }
 
     @Test
@@ -493,7 +480,6 @@ public class RegistroDeEstudoResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(registroDeEstudo.getId().intValue())))
             .andExpect(jsonPath("$.[*].horaInicial").value(hasItem(DEFAULT_HORA_INICIAL.toString())))
-            .andExpect(jsonPath("$.[*].horaFinal").value(hasItem(DEFAULT_HORA_FINAL.toString())))
             .andExpect(jsonPath("$.[*].duracaoTempo").value(hasItem(DEFAULT_DURACAO_TEMPO)));
 
         // Check, that the count call also returns 1
@@ -542,7 +528,6 @@ public class RegistroDeEstudoResourceIT {
         em.detach(updatedRegistroDeEstudo);
         updatedRegistroDeEstudo
             .horaInicial(UPDATED_HORA_INICIAL)
-            .horaFinal(UPDATED_HORA_FINAL)
             .duracaoTempo(UPDATED_DURACAO_TEMPO);
         RegistroDeEstudoDTO registroDeEstudoDTO = registroDeEstudoMapper.toDto(updatedRegistroDeEstudo);
 
@@ -556,7 +541,6 @@ public class RegistroDeEstudoResourceIT {
         assertThat(registroDeEstudoList).hasSize(databaseSizeBeforeUpdate);
         RegistroDeEstudo testRegistroDeEstudo = registroDeEstudoList.get(registroDeEstudoList.size() - 1);
         assertThat(testRegistroDeEstudo.getHoraInicial()).isEqualTo(UPDATED_HORA_INICIAL);
-        assertThat(testRegistroDeEstudo.getHoraFinal()).isEqualTo(UPDATED_HORA_FINAL);
         assertThat(testRegistroDeEstudo.getDuracaoTempo()).isEqualTo(UPDATED_DURACAO_TEMPO);
     }
 

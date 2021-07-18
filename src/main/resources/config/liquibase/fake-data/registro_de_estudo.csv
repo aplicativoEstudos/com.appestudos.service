@@ -1,11 +1,11 @@
-id;hora_inicial;hora_final;duracao_tempo;area_id;disciplina_id;pessoa_id
-1;2021-07-04T20:45:17;2021-07-04T05:18:48;Paradigm;1;1;1
-2;2021-07-04T13:47:38;2021-07-04T13:18:39;North Dakota Incredible Plastic Shirt;2;2;2
-3;2021-07-05T00:35:03;2021-07-04T03:29:20;technologies;3;3;3
-4;2021-07-04T05:02:37;2021-07-04T04:44:28;Knolls Fresh;4;4;4
-5;2021-07-04T11:08:48;2021-07-04T21:02:28;SCSI Mountains;5;5;5
-6;2021-07-04T21:58:13;2021-07-04T18:34:26;Creative;6;6;6
-7;2021-07-04T13:19:45;2021-07-04T19:30:46;Kentucky Liaison;7;7;7
-8;2021-07-04T19:51:57;2021-07-04T16:56:37;Checking Account HTTP;8;8;8
-9;2021-07-04T12:24:33;2021-07-04T18:18:14;Cotton;9;9;9
-10;2021-07-04T17:35:29;2021-07-04T03:00:37;matrix dynamic Wooden;10;10;10
+id;hora_inicial;duracao_tempo;area_id;disciplina_id;pessoa_id
+1;2021-07-04T20:45:17;Paradigm;1;1;1
+2;2021-07-04T13:47:38;North Dakota Incredible Plastic Shirt;2;2;2
+3;2021-07-05T00:35:03;technologies;3;3;3
+4;2021-07-04T05:02:37;Knolls Fresh;4;4;4
+5;2021-07-04T11:08:48;SCSI Mountains;5;5;5
+6;2021-07-04T21:58:13;Creative;6;6;6
+7;2021-07-04T13:19:45;Kentucky Liaison;7;7;7
+8;2021-07-04T19:51:57;Checking Account HTTP;8;8;8
+9;2021-07-04T12:24:33;Cotton;9;9;9
+10;2021-07-04T17:35:29;matrix dynamic Wooden;10;10;10
