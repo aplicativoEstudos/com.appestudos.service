@@ -1,9 +1,11 @@
 package com.appestudos.service.domain;
 
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * A Disciplina.
@@ -20,6 +22,10 @@ public class Disciplina implements Serializable {
 
     @Column(name = "nome_disciplina")
     private String nomeDisciplina;
+
+    @Type(type = "uuid-char")
+    @Column(name = "id_user", length = 36)
+    private UUID idUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -41,6 +47,19 @@ public class Disciplina implements Serializable {
 
     public void setNomeDisciplina(String nomeDisciplina) {
         this.nomeDisciplina = nomeDisciplina;
+    }
+
+    public UUID getIdUser() {
+        return idUser;
+    }
+
+    public Disciplina idUser(UUID idUser) {
+        this.idUser = idUser;
+        return this;
+    }
+
+    public void setIdUser(UUID idUser) {
+        this.idUser = idUser;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -66,6 +85,7 @@ public class Disciplina implements Serializable {
         return "Disciplina{" +
             "id=" + getId() +
             ", nomeDisciplina='" + getNomeDisciplina() + "'" +
+            ", idUser='" + getIdUser() + "'" +
             "}";
     }
 }

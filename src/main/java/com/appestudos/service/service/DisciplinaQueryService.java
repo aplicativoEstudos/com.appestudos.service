@@ -1,11 +1,15 @@
 package com.appestudos.service.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.persistence.criteria.JoinType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,10 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
+import io.github.jhipster.service.filter.UUIDFilter;
 
 import com.appestudos.service.domain.Disciplina;
 import com.appestudos.service.domain.*; // for static metamodels
 import com.appestudos.service.repository.DisciplinaRepository;
+import com.appestudos.service.security.SecurityUtils;
 import com.appestudos.service.service.dto.DisciplinaCriteria;
 import com.appestudos.service.service.dto.DisciplinaDTO;
 import com.appestudos.service.service.mapper.DisciplinaMapper;
@@ -36,6 +42,8 @@ public class DisciplinaQueryService extends QueryService<Disciplina> {
     private final DisciplinaRepository disciplinaRepository;
 
     private final DisciplinaMapper disciplinaMapper;
+    
+    private static final String SUB = "id_user";
 
     public DisciplinaQueryService(DisciplinaRepository disciplinaRepository, DisciplinaMapper disciplinaMapper) {
         this.disciplinaRepository = disciplinaRepository;
@@ -62,6 +70,8 @@ public class DisciplinaQueryService extends QueryService<Disciplina> {
      */
     @Transactional(readOnly = true)
     public Page<DisciplinaDTO> findByCriteria(DisciplinaCriteria criteria, Pageable page) {
+    	criteria.setIdUser(new UUIDFilter());
+    	criteria.getIdUser().setEquals(UUID.fromString(((Optional<Map<String, String>>)SecurityUtils.getCurrentLoginMatricula()).get().get(SUB)));
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Disciplina> specification = createSpecification(criteria);
         return disciplinaRepository.findAll(specification, page)
@@ -93,6 +103,9 @@ public class DisciplinaQueryService extends QueryService<Disciplina> {
             }
             if (criteria.getNomeDisciplina() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNomeDisciplina(), Disciplina_.nomeDisciplina));
+            }
+            if (criteria.getIdUser() != null) {
+                specification = specification.and(buildSpecification(criteria.getIdUser(), Disciplina_.idUser));
             }
         }
         return specification;

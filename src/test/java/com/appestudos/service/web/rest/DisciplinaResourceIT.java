@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -38,6 +39,9 @@ public class DisciplinaResourceIT {
 
     private static final String DEFAULT_NOME_DISCIPLINA = "AAAAAAAAAA";
     private static final String UPDATED_NOME_DISCIPLINA = "BBBBBBBBBB";
+
+    private static final UUID DEFAULT_ID_USER = UUID.randomUUID();
+    private static final UUID UPDATED_ID_USER = UUID.randomUUID();
 
     @Autowired
     private DisciplinaRepository disciplinaRepository;
@@ -67,7 +71,8 @@ public class DisciplinaResourceIT {
      */
     public static Disciplina createEntity(EntityManager em) {
         Disciplina disciplina = new Disciplina()
-            .nomeDisciplina(DEFAULT_NOME_DISCIPLINA);
+            .nomeDisciplina(DEFAULT_NOME_DISCIPLINA)
+            .idUser(DEFAULT_ID_USER);
         return disciplina;
     }
     /**
@@ -78,7 +83,8 @@ public class DisciplinaResourceIT {
      */
     public static Disciplina createUpdatedEntity(EntityManager em) {
         Disciplina disciplina = new Disciplina()
-            .nomeDisciplina(UPDATED_NOME_DISCIPLINA);
+            .nomeDisciplina(UPDATED_NOME_DISCIPLINA)
+            .idUser(UPDATED_ID_USER);
         return disciplina;
     }
 
@@ -103,6 +109,7 @@ public class DisciplinaResourceIT {
         assertThat(disciplinaList).hasSize(databaseSizeBeforeCreate + 1);
         Disciplina testDisciplina = disciplinaList.get(disciplinaList.size() - 1);
         assertThat(testDisciplina.getNomeDisciplina()).isEqualTo(DEFAULT_NOME_DISCIPLINA);
+        assertThat(testDisciplina.getIdUser()).isEqualTo(DEFAULT_ID_USER);
     }
 
     @Test
@@ -137,7 +144,8 @@ public class DisciplinaResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(disciplina.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeDisciplina").value(hasItem(DEFAULT_NOME_DISCIPLINA)));
+            .andExpect(jsonPath("$.[*].nomeDisciplina").value(hasItem(DEFAULT_NOME_DISCIPLINA)))
+            .andExpect(jsonPath("$.[*].idUser").value(hasItem(DEFAULT_ID_USER.toString())));
     }
     
     @Test
@@ -151,7 +159,8 @@ public class DisciplinaResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(disciplina.getId().intValue()))
-            .andExpect(jsonPath("$.nomeDisciplina").value(DEFAULT_NOME_DISCIPLINA));
+            .andExpect(jsonPath("$.nomeDisciplina").value(DEFAULT_NOME_DISCIPLINA))
+            .andExpect(jsonPath("$.idUser").value(DEFAULT_ID_USER.toString()));
     }
 
 
@@ -251,6 +260,58 @@ public class DisciplinaResourceIT {
         defaultDisciplinaShouldBeFound("nomeDisciplina.doesNotContain=" + UPDATED_NOME_DISCIPLINA);
     }
 
+
+    @Test
+    @Transactional
+    public void getAllDisciplinasByIdUserIsEqualToSomething() throws Exception {
+        // Initialize the database
+        disciplinaRepository.saveAndFlush(disciplina);
+
+        // Get all the disciplinaList where idUser equals to DEFAULT_ID_USER
+        defaultDisciplinaShouldBeFound("idUser.equals=" + DEFAULT_ID_USER);
+
+        // Get all the disciplinaList where idUser equals to UPDATED_ID_USER
+        defaultDisciplinaShouldNotBeFound("idUser.equals=" + UPDATED_ID_USER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisciplinasByIdUserIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        disciplinaRepository.saveAndFlush(disciplina);
+
+        // Get all the disciplinaList where idUser not equals to DEFAULT_ID_USER
+        defaultDisciplinaShouldNotBeFound("idUser.notEquals=" + DEFAULT_ID_USER);
+
+        // Get all the disciplinaList where idUser not equals to UPDATED_ID_USER
+        defaultDisciplinaShouldBeFound("idUser.notEquals=" + UPDATED_ID_USER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisciplinasByIdUserIsInShouldWork() throws Exception {
+        // Initialize the database
+        disciplinaRepository.saveAndFlush(disciplina);
+
+        // Get all the disciplinaList where idUser in DEFAULT_ID_USER or UPDATED_ID_USER
+        defaultDisciplinaShouldBeFound("idUser.in=" + DEFAULT_ID_USER + "," + UPDATED_ID_USER);
+
+        // Get all the disciplinaList where idUser equals to UPDATED_ID_USER
+        defaultDisciplinaShouldNotBeFound("idUser.in=" + UPDATED_ID_USER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisciplinasByIdUserIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        disciplinaRepository.saveAndFlush(disciplina);
+
+        // Get all the disciplinaList where idUser is not null
+        defaultDisciplinaShouldBeFound("idUser.specified=true");
+
+        // Get all the disciplinaList where idUser is null
+        defaultDisciplinaShouldNotBeFound("idUser.specified=false");
+    }
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -259,7 +320,8 @@ public class DisciplinaResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(disciplina.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nomeDisciplina").value(hasItem(DEFAULT_NOME_DISCIPLINA)));
+            .andExpect(jsonPath("$.[*].nomeDisciplina").value(hasItem(DEFAULT_NOME_DISCIPLINA)))
+            .andExpect(jsonPath("$.[*].idUser").value(hasItem(DEFAULT_ID_USER.toString())));
 
         // Check, that the count call also returns 1
         restDisciplinaMockMvc.perform(get("/api/disciplinas/count?sort=id,desc&" + filter))
@@ -306,7 +368,8 @@ public class DisciplinaResourceIT {
         // Disconnect from session so that the updates on updatedDisciplina are not directly saved in db
         em.detach(updatedDisciplina);
         updatedDisciplina
-            .nomeDisciplina(UPDATED_NOME_DISCIPLINA);
+            .nomeDisciplina(UPDATED_NOME_DISCIPLINA)
+            .idUser(UPDATED_ID_USER);
         DisciplinaDTO disciplinaDTO = disciplinaMapper.toDto(updatedDisciplina);
 
         restDisciplinaMockMvc.perform(put("/api/disciplinas").with(csrf())
@@ -319,6 +382,7 @@ public class DisciplinaResourceIT {
         assertThat(disciplinaList).hasSize(databaseSizeBeforeUpdate);
         Disciplina testDisciplina = disciplinaList.get(disciplinaList.size() - 1);
         assertThat(testDisciplina.getNomeDisciplina()).isEqualTo(UPDATED_NOME_DISCIPLINA);
+        assertThat(testDisciplina.getIdUser()).isEqualTo(UPDATED_ID_USER);
     }
 
     @Test

@@ -6,6 +6,10 @@
     {
       "fieldName": "nomeDisciplina",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "idUser",
+      "fieldType": "UUID"
     }
   ],
   "changelogDate": "20210705014223",

@@ -1,0 +1,42 @@
+{
+  "name": "AreaDisciplina",
+  "relationships": [
+    {
+      "relationshipName": "area",
+      "otherEntityName": "area",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "noma",
+      "otherEntityRelationshipName": "areaDisciplina"
+    },
+    {
+      "relationshipName": "disciplina",
+      "otherEntityName": "disciplina",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "nomeDisciplina",
+      "otherEntityRelationshipName": "areaDisciplina"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "geral",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "idUser",
+      "fieldType": "UUID"
+    }
+  ],
+  "changelogDate": "20210728235300",
+  "fluentMethods": true,
+  "clientRootFolder": "appestudos",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "area_disciplina",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination",
+  "microserviceName": "appestudos",
+  "enableEntityAudit": true
+}

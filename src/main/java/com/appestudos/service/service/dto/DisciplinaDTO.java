@@ -1,6 +1,7 @@
 package com.appestudos.service.service.dto;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * A DTO for the {@link com.appestudos.service.domain.Disciplina} entity.
@@ -10,6 +11,8 @@ public class DisciplinaDTO implements Serializable {
     private Long id;
 
     private String nomeDisciplina;
+
+    private UUID idUser;
 
     
     public Long getId() {
@@ -26,6 +29,14 @@ public class DisciplinaDTO implements Serializable {
 
     public void setNomeDisciplina(String nomeDisciplina) {
         this.nomeDisciplina = nomeDisciplina;
+    }
+
+    public UUID getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(UUID idUser) {
+        this.idUser = idUser;
     }
 
     @Override
@@ -51,6 +62,7 @@ public class DisciplinaDTO implements Serializable {
         return "DisciplinaDTO{" +
             "id=" + getId() +
             ", nomeDisciplina='" + getNomeDisciplina() + "'" +
+            ", idUser='" + getIdUser() + "'" +
             "}";
     }
 }

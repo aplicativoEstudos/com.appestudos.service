@@ -10,6 +10,7 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.UUIDFilter;
 
 /**
  * Criteria class for the {@link com.appestudos.service.domain.Disciplina} entity. This class is used
@@ -28,12 +29,15 @@ public class DisciplinaCriteria implements Serializable, Criteria {
 
     private StringFilter nomeDisciplina;
 
+    private UUIDFilter idUser;
+
     public DisciplinaCriteria() {
     }
 
     public DisciplinaCriteria(DisciplinaCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.nomeDisciplina = other.nomeDisciplina == null ? null : other.nomeDisciplina.copy();
+        this.idUser = other.idUser == null ? null : other.idUser.copy();
     }
 
     @Override
@@ -57,6 +61,14 @@ public class DisciplinaCriteria implements Serializable, Criteria {
         this.nomeDisciplina = nomeDisciplina;
     }
 
+    public UUIDFilter getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(UUIDFilter idUser) {
+        this.idUser = idUser;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -69,14 +81,16 @@ public class DisciplinaCriteria implements Serializable, Criteria {
         final DisciplinaCriteria that = (DisciplinaCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(nomeDisciplina, that.nomeDisciplina);
+            Objects.equals(nomeDisciplina, that.nomeDisciplina) &&
+            Objects.equals(idUser, that.idUser);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
         id,
-        nomeDisciplina
+        nomeDisciplina,
+        idUser
         );
     }
 
@@ -86,6 +100,7 @@ public class DisciplinaCriteria implements Serializable, Criteria {
         return "DisciplinaCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (nomeDisciplina != null ? "nomeDisciplina=" + nomeDisciplina + ", " : "") +
+                (idUser != null ? "idUser=" + idUser + ", " : "") +
             "}";
     }
 
