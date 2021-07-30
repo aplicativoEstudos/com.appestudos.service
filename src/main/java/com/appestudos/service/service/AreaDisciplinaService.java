@@ -1,10 +1,12 @@
 package com.appestudos.service.service;
 
+import com.appestudos.service.service.dto.AreaDisciplinaCriteria;
 import com.appestudos.service.service.dto.AreaDisciplinaDTO;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -43,4 +45,6 @@ public interface AreaDisciplinaService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+	List<AreaDisciplinaDTO> findAllComGeral(AreaDisciplinaCriteria criteria);
 }

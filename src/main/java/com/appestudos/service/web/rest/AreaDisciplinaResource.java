@@ -102,6 +102,13 @@ public class AreaDisciplinaResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+    
+    @GetMapping("/area-disciplinas/com-geral")
+    public ResponseEntity<List<AreaDisciplinaDTO>> getAllAreaDisciplinasComGeral(AreaDisciplinaCriteria criteria) {
+        log.debug("REST request to get AreaDisciplinas by criteria: {}", criteria);
+        List<AreaDisciplinaDTO> page = areaDisciplinaService.findAllComGeral(criteria);
+        return ResponseEntity.ok().body(page);
+    }
 
     /**
      * {@code GET  /area-disciplinas/count} : count all the areaDisciplinas.

@@ -4,6 +4,7 @@ import com.appestudos.service.service.AreaDisciplinaService;
 import com.appestudos.service.domain.AreaDisciplina;
 import com.appestudos.service.repository.AreaDisciplinaRepository;
 import com.appestudos.service.security.SecurityUtils;
+import com.appestudos.service.service.dto.AreaDisciplinaCriteria;
 import com.appestudos.service.service.dto.AreaDisciplinaDTO;
 import com.appestudos.service.service.mapper.AreaDisciplinaMapper;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -53,6 +55,14 @@ public class AreaDisciplinaServiceImpl implements AreaDisciplinaService {
         log.debug("Request to get all AreaDisciplinas");
         return areaDisciplinaRepository.findAll(pageable)
             .map(areaDisciplinaMapper::toDto);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<AreaDisciplinaDTO> findAllComGeral(AreaDisciplinaCriteria criteria) {
+        log.debug("Request to get all AreaDisciplinas");
+        return areaDisciplinaMapper.toDto(areaDisciplinaRepository
+        		.getAreaIdGeralIdUser(criteria.getAreaId().getEquals(),true,((Optional<Map<String, String>>)SecurityUtils.getCurrentLoginMatricula()).get().get(SUB)));
     }
 
 
