@@ -27,6 +27,10 @@
     {
       "fieldName": "numero",
       "fieldType": "Integer"
+    },
+    {
+      "fieldName": "idUser",
+      "fieldType": "UUID"
     }
   ],
   "changelogDate": "20210702013602",
