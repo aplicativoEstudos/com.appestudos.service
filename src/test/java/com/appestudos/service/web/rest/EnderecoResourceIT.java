@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -45,12 +46,15 @@ public class EnderecoResourceIT {
     private static final String DEFAULT_RUA = "AAAAAAAAAA";
     private static final String UPDATED_RUA = "BBBBBBBBBB";
 
-    private static final String DEFAULT_CEP = "12620-173";
-    private static final String UPDATED_CEP = "25479-970";
+    private static final String DEFAULT_CEP = "92473-271";
+    private static final String UPDATED_CEP = "42051-524";
 
     private static final Integer DEFAULT_NUMERO = 1;
     private static final Integer UPDATED_NUMERO = 2;
     private static final Integer SMALLER_NUMERO = 1 - 1;
+
+    private static final UUID DEFAULT_ID_USER = UUID.randomUUID();
+    private static final UUID UPDATED_ID_USER = UUID.randomUUID();
 
     @Autowired
     private EnderecoRepository enderecoRepository;
@@ -84,7 +88,8 @@ public class EnderecoResourceIT {
             .bairro(DEFAULT_BAIRRO)
             .rua(DEFAULT_RUA)
             .cep(DEFAULT_CEP)
-            .numero(DEFAULT_NUMERO);
+            .numero(DEFAULT_NUMERO)
+            .idUser(DEFAULT_ID_USER);
         return endereco;
     }
     /**
@@ -99,7 +104,8 @@ public class EnderecoResourceIT {
             .bairro(UPDATED_BAIRRO)
             .rua(UPDATED_RUA)
             .cep(UPDATED_CEP)
-            .numero(UPDATED_NUMERO);
+            .numero(UPDATED_NUMERO)
+            .idUser(UPDATED_ID_USER);
         return endereco;
     }
 
@@ -128,6 +134,7 @@ public class EnderecoResourceIT {
         assertThat(testEndereco.getRua()).isEqualTo(DEFAULT_RUA);
         assertThat(testEndereco.getCep()).isEqualTo(DEFAULT_CEP);
         assertThat(testEndereco.getNumero()).isEqualTo(DEFAULT_NUMERO);
+        assertThat(testEndereco.getIdUser()).isEqualTo(DEFAULT_ID_USER);
     }
 
     @Test
@@ -246,7 +253,8 @@ public class EnderecoResourceIT {
             .andExpect(jsonPath("$.[*].bairro").value(hasItem(DEFAULT_BAIRRO)))
             .andExpect(jsonPath("$.[*].rua").value(hasItem(DEFAULT_RUA)))
             .andExpect(jsonPath("$.[*].cep").value(hasItem(DEFAULT_CEP)))
-            .andExpect(jsonPath("$.[*].numero").value(hasItem(DEFAULT_NUMERO)));
+            .andExpect(jsonPath("$.[*].numero").value(hasItem(DEFAULT_NUMERO)))
+            .andExpect(jsonPath("$.[*].idUser").value(hasItem(DEFAULT_ID_USER.toString())));
     }
     
     @Test
@@ -264,7 +272,8 @@ public class EnderecoResourceIT {
             .andExpect(jsonPath("$.bairro").value(DEFAULT_BAIRRO))
             .andExpect(jsonPath("$.rua").value(DEFAULT_RUA))
             .andExpect(jsonPath("$.cep").value(DEFAULT_CEP))
-            .andExpect(jsonPath("$.numero").value(DEFAULT_NUMERO));
+            .andExpect(jsonPath("$.numero").value(DEFAULT_NUMERO))
+            .andExpect(jsonPath("$.idUser").value(DEFAULT_ID_USER.toString()));
     }
 
 
@@ -703,6 +712,58 @@ public class EnderecoResourceIT {
         defaultEnderecoShouldBeFound("numero.greaterThan=" + SMALLER_NUMERO);
     }
 
+
+    @Test
+    @Transactional
+    public void getAllEnderecosByIdUserIsEqualToSomething() throws Exception {
+        // Initialize the database
+        enderecoRepository.saveAndFlush(endereco);
+
+        // Get all the enderecoList where idUser equals to DEFAULT_ID_USER
+        defaultEnderecoShouldBeFound("idUser.equals=" + DEFAULT_ID_USER);
+
+        // Get all the enderecoList where idUser equals to UPDATED_ID_USER
+        defaultEnderecoShouldNotBeFound("idUser.equals=" + UPDATED_ID_USER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllEnderecosByIdUserIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        enderecoRepository.saveAndFlush(endereco);
+
+        // Get all the enderecoList where idUser not equals to DEFAULT_ID_USER
+        defaultEnderecoShouldNotBeFound("idUser.notEquals=" + DEFAULT_ID_USER);
+
+        // Get all the enderecoList where idUser not equals to UPDATED_ID_USER
+        defaultEnderecoShouldBeFound("idUser.notEquals=" + UPDATED_ID_USER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllEnderecosByIdUserIsInShouldWork() throws Exception {
+        // Initialize the database
+        enderecoRepository.saveAndFlush(endereco);
+
+        // Get all the enderecoList where idUser in DEFAULT_ID_USER or UPDATED_ID_USER
+        defaultEnderecoShouldBeFound("idUser.in=" + DEFAULT_ID_USER + "," + UPDATED_ID_USER);
+
+        // Get all the enderecoList where idUser equals to UPDATED_ID_USER
+        defaultEnderecoShouldNotBeFound("idUser.in=" + UPDATED_ID_USER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllEnderecosByIdUserIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        enderecoRepository.saveAndFlush(endereco);
+
+        // Get all the enderecoList where idUser is not null
+        defaultEnderecoShouldBeFound("idUser.specified=true");
+
+        // Get all the enderecoList where idUser is null
+        defaultEnderecoShouldNotBeFound("idUser.specified=false");
+    }
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -715,7 +776,8 @@ public class EnderecoResourceIT {
             .andExpect(jsonPath("$.[*].bairro").value(hasItem(DEFAULT_BAIRRO)))
             .andExpect(jsonPath("$.[*].rua").value(hasItem(DEFAULT_RUA)))
             .andExpect(jsonPath("$.[*].cep").value(hasItem(DEFAULT_CEP)))
-            .andExpect(jsonPath("$.[*].numero").value(hasItem(DEFAULT_NUMERO)));
+            .andExpect(jsonPath("$.[*].numero").value(hasItem(DEFAULT_NUMERO)))
+            .andExpect(jsonPath("$.[*].idUser").value(hasItem(DEFAULT_ID_USER.toString())));
 
         // Check, that the count call also returns 1
         restEnderecoMockMvc.perform(get("/api/enderecos/count?sort=id,desc&" + filter))
@@ -766,7 +828,8 @@ public class EnderecoResourceIT {
             .bairro(UPDATED_BAIRRO)
             .rua(UPDATED_RUA)
             .cep(UPDATED_CEP)
-            .numero(UPDATED_NUMERO);
+            .numero(UPDATED_NUMERO)
+            .idUser(UPDATED_ID_USER);
         EnderecoDTO enderecoDTO = enderecoMapper.toDto(updatedEndereco);
 
         restEnderecoMockMvc.perform(put("/api/enderecos").with(csrf())
@@ -783,6 +846,7 @@ public class EnderecoResourceIT {
         assertThat(testEndereco.getRua()).isEqualTo(UPDATED_RUA);
         assertThat(testEndereco.getCep()).isEqualTo(UPDATED_CEP);
         assertThat(testEndereco.getNumero()).isEqualTo(UPDATED_NUMERO);
+        assertThat(testEndereco.getIdUser()).isEqualTo(UPDATED_ID_USER);
     }
 
     @Test

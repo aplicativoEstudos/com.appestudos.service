@@ -2,6 +2,7 @@ package com.appestudos.service.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * A DTO for the {@link com.appestudos.service.domain.Endereco} entity.
@@ -24,6 +25,8 @@ public class EnderecoDTO implements Serializable {
     private String cep;
 
     private Integer numero;
+
+    private UUID idUser;
 
     
     public Long getId() {
@@ -74,6 +77,14 @@ public class EnderecoDTO implements Serializable {
         this.numero = numero;
     }
 
+    public UUID getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(UUID idUser) {
+        this.idUser = idUser;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -101,6 +112,7 @@ public class EnderecoDTO implements Serializable {
             ", rua='" + getRua() + "'" +
             ", cep='" + getCep() + "'" +
             ", numero=" + getNumero() +
+            ", idUser='" + getIdUser() + "'" +
             "}";
     }
 }

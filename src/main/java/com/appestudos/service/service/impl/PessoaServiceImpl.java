@@ -3,6 +3,7 @@ package com.appestudos.service.service.impl;
 import com.appestudos.service.service.PessoaService;
 import com.appestudos.service.domain.Pessoa;
 import com.appestudos.service.repository.PessoaRepository;
+import com.appestudos.service.security.SecurityUtils;
 import com.appestudos.service.service.dto.PessoaDTO;
 import com.appestudos.service.service.mapper.PessoaMapper;
 import org.slf4j.Logger;
@@ -13,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service Implementation for managing {@link Pessoa}.
@@ -27,6 +30,8 @@ public class PessoaServiceImpl implements PessoaService {
     private final PessoaRepository pessoaRepository;
 
     private final PessoaMapper pessoaMapper;
+    
+    private static final String SUB = "id_user";
 
     public PessoaServiceImpl(PessoaRepository pessoaRepository, PessoaMapper pessoaMapper) {
         this.pessoaRepository = pessoaRepository;
@@ -37,6 +42,7 @@ public class PessoaServiceImpl implements PessoaService {
     public PessoaDTO save(PessoaDTO pessoaDTO) {
         log.debug("Request to save Pessoa : {}", pessoaDTO);
         Pessoa pessoa = pessoaMapper.toEntity(pessoaDTO);
+        pessoa.setIdUser(UUID.fromString(((Optional<Map<String, String>>)SecurityUtils.getCurrentLoginMatricula()).get().get(SUB)));
         pessoa = pessoaRepository.save(pessoa);
         return pessoaMapper.toDto(pessoa);
     }

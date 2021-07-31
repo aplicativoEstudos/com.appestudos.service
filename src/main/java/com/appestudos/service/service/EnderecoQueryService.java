@@ -1,6 +1,9 @@
 package com.appestudos.service.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.persistence.criteria.JoinType;
 
@@ -13,10 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
+import io.github.jhipster.service.filter.UUIDFilter;
 
 import com.appestudos.service.domain.Endereco;
 import com.appestudos.service.domain.*; // for static metamodels
 import com.appestudos.service.repository.EnderecoRepository;
+import com.appestudos.service.security.SecurityUtils;
 import com.appestudos.service.service.dto.EnderecoCriteria;
 import com.appestudos.service.service.dto.EnderecoDTO;
 import com.appestudos.service.service.mapper.EnderecoMapper;
@@ -36,6 +41,8 @@ public class EnderecoQueryService extends QueryService<Endereco> {
     private final EnderecoRepository enderecoRepository;
 
     private final EnderecoMapper enderecoMapper;
+    
+    private static final String SUB = "id_user";
 
     public EnderecoQueryService(EnderecoRepository enderecoRepository, EnderecoMapper enderecoMapper) {
         this.enderecoRepository = enderecoRepository;
@@ -63,6 +70,8 @@ public class EnderecoQueryService extends QueryService<Endereco> {
     @Transactional(readOnly = true)
     public Page<EnderecoDTO> findByCriteria(EnderecoCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
+        criteria.setIdUser(new UUIDFilter());
+        criteria.getIdUser().setEquals(UUID.fromString(((Optional<Map<String, String>>)SecurityUtils.getCurrentLoginMatricula()).get().get(SUB)));
         final Specification<Endereco> specification = createSpecification(criteria);
         return enderecoRepository.findAll(specification, page)
             .map(enderecoMapper::toDto);
@@ -105,6 +114,9 @@ public class EnderecoQueryService extends QueryService<Endereco> {
             }
             if (criteria.getNumero() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getNumero(), Endereco_.numero));
+            }
+            if (criteria.getIdUser() != null) {
+                specification = specification.and(buildSpecification(criteria.getIdUser(), Endereco_.idUser));
             }
         }
         return specification;

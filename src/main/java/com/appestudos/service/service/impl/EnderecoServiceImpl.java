@@ -3,6 +3,7 @@ package com.appestudos.service.service.impl;
 import com.appestudos.service.service.EnderecoService;
 import com.appestudos.service.domain.Endereco;
 import com.appestudos.service.repository.EnderecoRepository;
+import com.appestudos.service.security.SecurityUtils;
 import com.appestudos.service.service.dto.EnderecoDTO;
 import com.appestudos.service.service.mapper.EnderecoMapper;
 import org.slf4j.Logger;
@@ -13,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service Implementation for managing {@link Endereco}.
@@ -27,6 +30,8 @@ public class EnderecoServiceImpl implements EnderecoService {
     private final EnderecoRepository enderecoRepository;
 
     private final EnderecoMapper enderecoMapper;
+    
+    private static final String SUB = "id_user";
 
     public EnderecoServiceImpl(EnderecoRepository enderecoRepository, EnderecoMapper enderecoMapper) {
         this.enderecoRepository = enderecoRepository;
@@ -37,6 +42,7 @@ public class EnderecoServiceImpl implements EnderecoService {
     public EnderecoDTO save(EnderecoDTO enderecoDTO) {
         log.debug("Request to save Endereco : {}", enderecoDTO);
         Endereco endereco = enderecoMapper.toEntity(enderecoDTO);
+        endereco.setIdUser(UUID.fromString(((Optional<Map<String, String>>)SecurityUtils.getCurrentLoginMatricula()).get().get(SUB)));
         endereco = enderecoRepository.save(endereco);
         return enderecoMapper.toDto(endereco);
     }

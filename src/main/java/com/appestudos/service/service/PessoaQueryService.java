@@ -1,6 +1,9 @@
 package com.appestudos.service.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.persistence.criteria.JoinType;
 
@@ -13,10 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
+import io.github.jhipster.service.filter.LongFilter;
+import io.github.jhipster.service.filter.UUIDFilter;
 
 import com.appestudos.service.domain.Pessoa;
 import com.appestudos.service.domain.*; // for static metamodels
 import com.appestudos.service.repository.PessoaRepository;
+import com.appestudos.service.security.SecurityUtils;
 import com.appestudos.service.service.dto.PessoaCriteria;
 import com.appestudos.service.service.dto.PessoaDTO;
 import com.appestudos.service.service.mapper.PessoaMapper;
@@ -37,6 +43,8 @@ public class PessoaQueryService extends QueryService<Pessoa> {
 
     private final PessoaMapper pessoaMapper;
 
+    private static final String SUB = "id_user";
+    
     public PessoaQueryService(PessoaRepository pessoaRepository, PessoaMapper pessoaMapper) {
         this.pessoaRepository = pessoaRepository;
         this.pessoaMapper = pessoaMapper;
@@ -63,6 +71,8 @@ public class PessoaQueryService extends QueryService<Pessoa> {
     @Transactional(readOnly = true)
     public Page<PessoaDTO> findByCriteria(PessoaCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
+        criteria.setIdUser(new UUIDFilter());
+        criteria.getIdUser().setEquals(UUID.fromString(((Optional<Map<String, String>>)SecurityUtils.getCurrentLoginMatricula()).get().get(SUB)));
         final Specification<Pessoa> specification = createSpecification(criteria);
         return pessoaRepository.findAll(specification, page)
             .map(pessoaMapper::toDto);

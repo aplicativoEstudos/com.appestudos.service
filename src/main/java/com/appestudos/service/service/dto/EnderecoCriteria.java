@@ -10,6 +10,7 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.UUIDFilter;
 
 /**
  * Criteria class for the {@link com.appestudos.service.domain.Endereco} entity. This class is used
@@ -36,6 +37,8 @@ public class EnderecoCriteria implements Serializable, Criteria {
 
     private IntegerFilter numero;
 
+    private UUIDFilter idUser;
+
     public EnderecoCriteria() {
     }
 
@@ -46,6 +49,7 @@ public class EnderecoCriteria implements Serializable, Criteria {
         this.rua = other.rua == null ? null : other.rua.copy();
         this.cep = other.cep == null ? null : other.cep.copy();
         this.numero = other.numero == null ? null : other.numero.copy();
+        this.idUser = other.idUser == null ? null : other.idUser.copy();
     }
 
     @Override
@@ -101,6 +105,14 @@ public class EnderecoCriteria implements Serializable, Criteria {
         this.numero = numero;
     }
 
+    public UUIDFilter getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(UUIDFilter idUser) {
+        this.idUser = idUser;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -117,7 +129,8 @@ public class EnderecoCriteria implements Serializable, Criteria {
             Objects.equals(bairro, that.bairro) &&
             Objects.equals(rua, that.rua) &&
             Objects.equals(cep, that.cep) &&
-            Objects.equals(numero, that.numero);
+            Objects.equals(numero, that.numero) &&
+            Objects.equals(idUser, that.idUser);
     }
 
     @Override
@@ -128,7 +141,8 @@ public class EnderecoCriteria implements Serializable, Criteria {
         bairro,
         rua,
         cep,
-        numero
+        numero,
+        idUser
         );
     }
 
@@ -142,6 +156,7 @@ public class EnderecoCriteria implements Serializable, Criteria {
                 (rua != null ? "rua=" + rua + ", " : "") +
                 (cep != null ? "cep=" + cep + ", " : "") +
                 (numero != null ? "numero=" + numero + ", " : "") +
+                (idUser != null ? "idUser=" + idUser + ", " : "") +
             "}";
     }
 
