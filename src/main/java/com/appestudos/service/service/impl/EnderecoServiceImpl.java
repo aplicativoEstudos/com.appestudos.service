@@ -88,25 +88,4 @@ public class EnderecoServiceImpl implements EnderecoService {
     	EnderecoViaCepDto test = mailService.enviarEmail(cep).getBody();
     	return test;
     }
-//    	EnderecoViaCepDto enderecoDto = new EnderecoViaCepDto();
-//    	
-//    	String url = "http://viacep.com.br/ws/" + cep + "/json/";
-//    	//Ler Json a partir da URL
-//    	try {
-//    		InputStream is = new URL(url).openStream();
-//    		BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-//    		StringBuilder sb = new StringBuilder();
-//    		int cp;
-//    		while ((cp = rd.read()) != -1) {
-//    			sb.append((char) cp);
-//    		}
-//    		String jsonText = sb.toString();
-//    		Gson gson = new Gson();
-//    		enderecoDto = gson.fromJson(jsonText, EnderecoViaCepDto.class);
-//    	}catch (Exception e1) {
-//    		e1.printStackTrace();
-//    		throw new RuntimeException("Erro na consulta ZIP COD "+cep);
-//    	}
-//    	return enderecoDto;
-//    }
 }
