@@ -3,6 +3,7 @@ package com.appestudos.service.web.rest;
 import com.appestudos.service.service.EnderecoService;
 import com.appestudos.service.web.rest.errors.BadRequestAlertException;
 import com.appestudos.service.service.dto.EnderecoDTO;
+import com.appestudos.service.service.dto.EnderecoViaCepDto;
 import com.appestudos.service.service.dto.EnderecoCriteria;
 import com.appestudos.service.service.EnderecoQueryService;
 
@@ -140,5 +141,12 @@ public class EnderecoResource {
         log.debug("REST request to delete Endereco : {}", id);
         enderecoService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    @GetMapping("/enderecos/via-cep/{cep}")
+    public ResponseEntity<EnderecoViaCepDto> getViaCep(@PathVariable String cep) {
+        log.debug("REST request to get Via Cep: {}", cep);
+        EnderecoViaCepDto enderecoViaCepDto = enderecoService.viaCep(cep);
+        return ResponseEntity.ok().body(enderecoViaCepDto);
     }
 }

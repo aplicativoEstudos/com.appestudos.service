@@ -1,6 +1,7 @@
 package com.appestudos.service.service;
 
 import com.appestudos.service.service.dto.EnderecoDTO;
+import com.appestudos.service.service.dto.EnderecoViaCepDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,4 +44,7 @@ public interface EnderecoService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+	EnderecoViaCepDto viaCep(String cep);
+    
 }
