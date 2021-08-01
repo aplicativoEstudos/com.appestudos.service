@@ -9,7 +9,7 @@ import com.appestudos.service.service.dto.EnderecoViaCepDto;
 
 
 @FeignClient(value="viaCep", url = "http://viacep.com.br/ws")
-public interface MailService {
+public interface ViaCepService {
 	
 //	@RequestMapping(method = RequestMethod.POST, value = "/stores/{storeId}", consumes = "application/json")
 	 @GetMapping("/{cep}/json/")

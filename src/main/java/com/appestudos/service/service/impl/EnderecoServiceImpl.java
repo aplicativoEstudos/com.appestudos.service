@@ -1,7 +1,7 @@
 package com.appestudos.service.service.impl;
 
 import com.appestudos.service.service.EnderecoService;
-import com.appestudos.service.service.Utils.MailService;
+import com.appestudos.service.service.Utils.ViaCepService;
 import com.appestudos.service.domain.Endereco;
 import com.appestudos.service.repository.EnderecoRepository;
 import com.appestudos.service.security.SecurityUtils;
@@ -43,7 +43,7 @@ public class EnderecoServiceImpl implements EnderecoService {
     private static final String SUB = "id_user";
     
     @Autowired 
-    private MailService mailService;
+    private ViaCepService mailService;
 
     public EnderecoServiceImpl(EnderecoRepository enderecoRepository, EnderecoMapper enderecoMapper) {
         this.enderecoRepository = enderecoRepository;
